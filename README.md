@@ -7,7 +7,7 @@ Admin area
 http://vectoriza.com.br/p2/controleApp
 
 User area
-http://vectoriza.com.br/p2/controleApp
+http://vectoriza.com.br/p2/controleApp/user
 
 
 admin@gmail.com pw:123
