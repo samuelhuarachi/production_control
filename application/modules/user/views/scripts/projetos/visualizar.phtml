@@ -1,0 +1,162 @@
+<a href="<?php echo $this->baseUrl('/user'); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+<br>
+<br>
+<?php if (count($this->messages)) : ?>
+    <br>
+    <?php foreach ($this->messages as $message) : ?>
+        	<?php echo $message; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<style>
+	
+	.minhas_tarefas {
+		width: 444px;
+		float: left;
+	}
+
+	.todas-etapas{
+		float: left;
+		margin-left: 122px;
+	}
+</style>
+<h3><?php echo $this->projetoInfo['nome']; ?></h3>
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $this->porcentagem; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $this->porcentagem; ?>%;">
+    <?php echo $this->porcentagem; ?>%
+  </div>
+</div>
+
+
+<div class="minhas_tarefas">
+	<h3>Minhas tarefas</h3>
+	<table class="table table-hover">
+		<tr>
+			<td><strong>Etapa</strong></td>
+			<td><strong>Data início</strong></td>
+			<td><strong>Data final</strong></td>
+			<td><strong>Status</strong></td>
+			<td><strong>Operação</strong></td>
+		</tr>
+		<?php 
+		foreach ($this->minhasEtapas as $key => $value) {
+			echo '<tr>';
+			
+			echo '<td>';
+			echo $value['nome'] . ' - <a href="'.$this->baseUrl('user/etapas/mudarstatus/id/'.$value['id'].'/status/aberto').'">Aberto</a> / <a href="'.$this->baseUrl('user/etapas/mudarstatus/id/'.$value['id'].'/status/andamento').'">Em Andamento</a> / <a href="'.$this->baseUrl('user/etapas/mudarstatus/id/'.$value['id'].'/status/concluido').'">Concluído</a>';
+			echo '</td>';
+			echo '<td>';
+			echo date('d/m/Y',strtotime($value['inicio']));
+			echo '</td>';
+			echo '<td>';
+			echo date('d/m/Y',strtotime($value['fim']));
+
+			echo '</td>';
+
+			echo '<td>';
+
+			if($value['status'] == 'em andamento') {
+				echo ' <span class="label label-warning">Em andamento</span> ';
+			}
+
+			if($value['status'] == 'aberto') {
+				echo ' <span class="label label-default">Aberto</span> ';
+			}
+
+			if ($value['status'] == 'concluido')  {
+				echo ' <span class="label label-success">Concluído</span> ';
+			}
+
+			echo '</td>';
+			?>
+
+
+
+
+			<td>
+				<a href="<?php echo $this->baseUrl('/user/etapas/removerusuarioetapa/id/' . $value['id']); ?>" class="execc" onclick="return confirm('Remover tarefa?')"><button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove xex"></span></button></a>
+
+			</td>
+			<?php
+
+			echo '</tr>';
+		}
+
+
+		 ?>
+	</table>
+</div>
+
+<style>
+.execc {
+	float: right;
+}
+</style>
+<div class="todas-etapas">
+	
+	<h3>Todas as etapas do projeto</h3>
+	<table class="table table-hover">
+		<tr>
+			<td><strong>Etapa</strong></td>
+			<td><strong>Usuário</strong></td>
+			<td><strong>Status</strong></td>
+			<td></td>
+		</tr>
+
+
+		<?php  
+		foreach ($this->etapas as $key => $value) {
+			?>
+				<tr>
+					<?php $nomeUsuario = $this->usuario($value['id_funcionarios']);
+					$aberto1 = false;
+					if(!$nomeUsuario) {
+						$nomeUsuario['0']['nome'] = '<font color="red"><i>nehum usuário</i></font>';
+						$aberto1 = true;
+					}
+
+					 ?>
+					<td><?php echo $value['nome']; ?></td>
+					<td><?php echo $nomeUsuario['0']['nome']; ?></td>
+
+					<?php  
+					if($value['status'] == 'em andamento'){
+						$color = 'warning';
+					}
+					if($value['status'] == 'aberto'){
+						$color = 'default';
+					}
+					if($value['status'] == 'concluido'){
+						$color = 'success';
+					}
+					
+					?>
+
+					<td><span class="label label-<?php echo $color; ?>"><?php echo $value['status']; ?></span></td>
+					<td>
+					<?php 
+					if($aberto1 ) {
+						?>
+<a href="<?php echo $this->baseUrl('/user/etapas/adicionar/id/' . $value['id']); ?>" onclick="return confirm('Adicionar está tarefa?')"><button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"></span></button></a>
+
+
+						<?php
+					}
+
+					 ?>
+					
+
+					</td>
+
+
+				</tr>
+		<?php
+		}
+		?>
+		
+		
+
+
+	</table>
+</div>
+

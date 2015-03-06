@@ -1,0 +1,32 @@
+<ol class="breadcrumb">
+  <li><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Admin(s)</li>
+  <li class="active"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Editar</li>
+</ol>
+
+<?php if (count($this->messages)) : ?>
+    <?php foreach ($this->messages as $message) : ?>
+    <div id="field_name">
+    <!-- <strong style="text-transform:capitalize;">Email </strong> -->
+        <?php echo $message; ?>
+    </div>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+
+<style>
+	.frmcadastro {
+		width: 333px;
+	}
+</style>
+<div class="frmcadastro">
+	<?php 
+
+echo $this->frm;
+
+ ?>
+</div>
+
+
+
+
+ <br>

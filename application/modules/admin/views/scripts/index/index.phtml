@@ -1,0 +1,174 @@
+
+<style>
+	
+	#chartContainer, #chartContainer2 {
+		margin-left: auto;
+    margin-right: auto;
+	}
+
+</style>
+
+
+<div class="panel panel-success">
+  <div class="panel-heading">Gráfico dos projetos</div>
+  <div class="panel-body">
+    <form class="form-inline" action="#">
+	  <div class="form-group">
+	    <input type="text" class="form-control" id="date_de" placeholder="de">
+	  </div>
+	  <div class="form-group">
+	    <input type="email" class="form-control" id="date_ate" placeholder="até">
+	  </div>
+		<button type="submit" class="btn btn-default">Procurar</button>
+		<button type="submit" class="btn btn-default">Limpar filtros</button>
+	</form>
+  </div>
+</div>
+
+<div id="chartContainer" style="height: 300px; width: 833px; margin-bottom:35px;">
+</div>
+
+
+<div class="panel panel-success">
+  <div class="panel-heading">Gráfico dos funcionários</div>
+  <div class="panel-body">
+    <form class="form-inline" action="#">
+	  <div class="form-group">
+	    <input type="text" class="form-control" id="date_de2" placeholder="de">
+	  </div>
+	  <div class="form-group">
+	    <input type="email" class="form-control" id="date_ate2" placeholder="até">
+	  </div>
+		<button type="submit" class="btn btn-default">Procurar</button>
+		<button type="submit" class="btn btn-default">Limpar filtros</button>
+	</form>
+  </div>
+</div>
+<div id="chartContainer2" style="height: 300px; width: 833px;">
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+<script type="text/javascript">
+$(document).ready(function () {
+    /* assuming that text input datePicker would have id='datePicker' */
+    $( "#date_de" ).datepicker({ dateFormat: 'dd/mm/yy' });
+    $( "#date_ate" ).datepicker({ dateFormat: 'dd/mm/yy' });
+    $( "#date_de2" ).datepicker({ dateFormat: 'dd/mm/yy' });
+    $( "#date_ate2" ).datepicker({ dateFormat: 'dd/mm/yy' });
+
+});
+window.onload = function () {
+		var chart = new CanvasJS.Chart("chartContainer2", {
+			title:{
+				text:"Etapas relizadas em Fev/2015"				
+
+			},
+                        animationEnabled: true,
+			axisX:{
+				interval: 1,
+				gridThickness: 0,
+				labelFontSize: 10,
+				labelFontStyle: "normal",
+				labelFontWeight: "normal",
+				labelFontFamily: "Lucida Sans Unicode"
+
+			},
+			axisY2:{
+				interlacedColor: "rgba(1,77,101,.2)",
+				gridColor: "rgba(1,77,101,.1)"
+
+			},
+
+			data: [
+			{     
+				type: "bar",
+                name: "companies",
+				axisYType: "secondary",
+				color: "#014D65",				
+				dataPoints: [
+				
+				{y: 5, label: "Tiago"  },
+				{y: 6, label: "Mateus"  },
+				{y: 7, label: "Luiza"  },
+				{y: 8, label: "Jéssica"  },
+				{y: 8, label: "Carol"  },
+				{y: 8, label: "Renata"  },
+				{y: 9, label: "Mário"  },
+				{y: 9, label: "Denis"  },
+				{y: 12, label: "Luzia"  },
+				{y: 13, label: "Bruna"  },
+				{y: 13, label: "Bruno"  },
+				{y: 15, label: "Tiago"  },
+				{y: 28, label: "Raphael" },
+				{y: 32, label: "Moisés"   },
+				{y: 32, label: "Renata"  },
+				{y: 68, label: "Samuel"   },
+				{y: 73, label: "Eduardo"},
+				{y: 132, label: "Pedro" }
+				]
+			}
+			
+			]
+		});
+
+chart.render();
+
+
+
+var chart = new CanvasJS.Chart("chartContainer",
+    {
+      title:{
+        text: "Projetos"    
+      },
+      animationEnabled: true,
+      axisY: {
+        title: "quantidade projetos"
+      },
+      legend: {
+        verticalAlign: "bottom",
+        horizontalAlign: "center"
+      },
+      theme: "theme2",
+      data: [
+
+      {        
+        type: "column",  
+        showInLegend: true, 
+        legendMarkerColor: "grey",
+        legendText: "Projetos realizados nos últimos meses",
+        dataPoints: [      
+        {y: 33, label: "Ago/2014"},
+        {y: 45,  label: "Set/2014" },
+        {y: 55,  label: "Out/2014"},
+        {y: 101,  label: "Nov/2014"},
+        {y: 10,  label: "Dez/2014"},
+        {y: 50, label: "Jan/2015"},
+        {y: 33,  label: "Fev/2015"},        
+        {y: 90,  label: "Mar/2015"},
+        {y: 144,  label: "Abr/2015"}        
+        ]
+      }   
+      ]
+    });
+
+    chart.render();
+
+}
+
+
+  </script>
+
+

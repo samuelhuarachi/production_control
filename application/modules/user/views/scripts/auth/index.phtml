@@ -1,0 +1,63 @@
+ <script src="<?php echo $this->baseUrl("js/jquery.mask.js"); ?>"></script>
+
+
+<?php if (count($this->messages)) : ?>
+    <br>
+    <?php foreach ($this->messages as $message) : ?>
+        <?php echo $message; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+
+
+ <style>
+ 	.errors {
+ 		list-style: none;
+ 		padding: 0;
+ 		color: red;
+ 	}
+	.authfrm {
+		width: 430px;
+		float: left;
+	}
+ </style>
+
+<div class="authfrm">
+	 <h2><span class="glyphicon glyphicon-user" aria-hidden="true"> </span> Autenticação</h2>
+	<?php if( $this->error ): ?>
+	    <div class='notification'>
+	    	<p><?php echo $this->error; ?></p>
+	    </div>
+	<?php endif; ?>
+
+	<?php echo $this->form; ?>
+</div>
+
+
+
+
+<style>
+	
+	.cadastro-user {
+		width: 333px;
+		float: right;
+
+	}
+	
+</style>
+<div class="cadastro-user">
+	
+	<h2>Novo usuário</h2>
+	<?php 
+	echo $this->formularioCadastro;
+	 ?>
+
+
+</div>
+
+<script>
+	
+	$('#data_nascimento').mask("00/00/0000", {placeholder: "__/__/____"});
+
+	
+</script>

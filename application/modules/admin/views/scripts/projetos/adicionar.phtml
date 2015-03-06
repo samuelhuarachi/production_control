@@ -1,0 +1,42 @@
+<ol class="breadcrumb">
+  <li  class="active"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Projetos</li>
+  <li><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>  Adicionar</li>
+</ol>
+
+
+<a href="<?php echo $this->baseUrl('/admin/projetos'); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+
+<style>
+	.frm1 {
+		width: 300px;
+		float: left;
+		margin-left: 66px;
+	}
+	.errors {
+		list-style:none;
+		color:red;
+		padding:0;
+	}
+</style>
+<br>
+
+<div class="frm1">
+<?php 
+
+echo $this->frm;
+
+ ?>	
+
+</div>
+<script>
+	$(document).ready(function () {
+	    /* assuming that text input datePicker would have id='datePicker' */
+	    $( ".data_inicial" ).datepicker({ dateFormat: 'dd/mm/yy' });
+	    $( ".data_final" ).datepicker({ dateFormat: 'dd/mm/yy' });
+
+	});
+
+</script>
+
+
+

@@ -1,0 +1,40 @@
+<ol class="breadcrumb">
+  <li  class="active"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Projetos</li>
+  <li><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>  Etapas</li>
+  <li class="active"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>  Adicionar nova etapa</li>
+</ol>
+
+<a href="<?php echo $this->baseUrl('admin/projetos/etapas/id/' . $this->idProjeto ); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+
+<style>
+	
+	.frmaddetapas {
+		margin-left: 66px;
+		width: 301px;
+	}
+
+	.errors {
+		color: red;
+		list-style: none;
+		padding:0;
+	}
+</style>
+<div class="frmaddetapas">
+<?php 
+
+echo $this->frm;
+
+ ?>	
+
+</div>
+
+<script>
+	$(document).ready(function () {
+	    /* assuming that text input datePicker would have id='datePicker' */
+	    $( ".inicio" ).datepicker({ dateFormat: 'dd/mm/yy' });
+	    $( ".fim" ).datepicker({ dateFormat: 'dd/mm/yy' });
+
+	});
+
+</script>
+

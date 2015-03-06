@@ -1,0 +1,61 @@
+<nav>
+  <ul class="pagination">
+        <?php
+            $query = null;
+            
+            if( count( $_GET ) > 0 )
+                $query = '?' . http_build_query( $_GET ); 
+        ?>
+    
+
+        <!-- Link para a primeira página -->
+        <?php if (isset($this->previous)): ?>
+            <li>
+              <a href="<?php echo $this->url(array('pagina' => $this->first)) . $query; ?>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+        <?php else: ?>
+            <li class="disabled">
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+            </li>
+        <?php endif; ?>
+
+        <!-- Links numerados -->
+        <?php foreach ($this->pagesInRange as $page): ?>
+            <?php if ($page != $this->current): ?>
+                <li>
+                    <a href="<?php echo $this->url(array('pagina' => $page)) . $query; ?>">
+                        <?php echo $page; ?>
+                    </a>
+                </li>
+             <?php else: ?>
+                <li class="active">
+                    <a href="<?php echo $this->url(array('pagina' => $page)) . $query; ?>">
+                        <?php echo $page; ?>
+                    </a>
+                </li>
+             <?php endif; ?>
+        <?php endforeach; ?>
+    
+
+         <!-- Última página -->
+        <?php if (isset($this->next)): ?>
+            <li>
+                <a href="<?php echo $this->url(array('pagina' => $this->last)) . $query; ?>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <?php else: ?>
+            <li class="disabled">
+                <a href="#">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <?php endif; ?>
+
+
+  </ul>
+</nav>

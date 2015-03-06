@@ -1,0 +1,23 @@
+{
+  "name": "controle_producao",
+  "version": "1.0.0",
+  "description": "Software php para gerenciamento da produção dos projetos",
+  "main": "index.php",
+  "dependencies": {
+    "bootstrap": "^3.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samuelhuarachi/controle_producao.git"
+  },
+  "author": "by Samuel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuelhuarachi/controle_producao/issues"
+  },
+  "homepage": "https://github.com/samuelhuarachi/controle_producao"
+}

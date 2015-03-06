@@ -1,0 +1,54 @@
+ <script src="<?php echo $this->baseUrl("js/jquery.mask.js"); ?>"></script>
+
+<ol class="breadcrumb">
+  <li><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Funcionários</li>
+  <li class="active"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>  Editar</li>
+</ol>
+
+
+<br>
+
+
+
+
+<style>
+	.func_cadastro {
+		width: 300px;
+		margin-left: 66px;
+		margin-bottom: 200px;
+	}
+	
+	.errors {
+		list-style:none;
+		color: #FF0000;
+		padding: 0;
+	}
+
+	.flash1_msg {
+		margin-bottom: 20px;
+	}
+
+
+</style>
+
+
+<p>
+<a href="<?php echo $this->baseUrl('/admin/funcionarios/visualizar'); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+
+
+</p>
+<div class="func_cadastro">
+
+
+
+<?php 
+echo $this->formularioFuncionarios;
+?>
+</div>
+<script>
+	$(document).ready(function () {
+	    /* assuming that text input datePicker would have id='datePicker' */
+	    $( "#admissao" ).datepicker({ dateFormat: 'dd/mm/yy' });
+	     $('#salario').mask('000.000.000.000.000,00', {reverse: true});
+	});
+</script>

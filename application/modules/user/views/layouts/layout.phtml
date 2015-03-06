@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+       	<?php //echo $this->headTitle(); ?>
+		<title>## Meus projetos - Arcitech</title>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<link rel="stylesheet" href="<?php echo $this->baseUrl("/js/jquery-ui-1.11.3/jquery-ui.css"); ?>">
+
+    <script src="<?php echo $this->baseUrl("/js/jquery-ui-1.11.3/jquery-ui.min.js"); ?>"></script>
+
+		<script type="text/javascript" src="<?php echo $this->baseUrl("js/nicEdit.js"); ?>"></script>
+
+
+        <link href="<?php echo $this->baseUrl("bootstrap/dist/css/bootstrap.min.css"); ?>" rel="stylesheet">
+
+        <script src="<?php echo $this->baseUrl("bootstrap/dist/js/bootstrap.min.js"); ?>"></script>
+        
+        <script src="<?php echo $this->baseUrl("/js/canvasjs.min.js"); ?>"></script>
+
+
+    </head>
+    <body>
+        <?php $controllerValue =  Zend_Controller_Front::getInstance()->getRequest()->getControllerName(); ?>
+        <section class="container">
+
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="<?php echo $this->baseUrl('/user'); ?>">Meus projetos</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <?php if( $this->authStatus ): ?>
+                  <ul class="nav navbar-nav">
+                    <li <?php if($controllerValue == 'index') echo'class="active"';  ?> ><a href="<?php echo $this->baseUrl('/user'); ?>">Home<span class="sr-only">(current)</span></a></li>
+                    
+                    
+                  </ul>
+                  
+                  <ul class="nav navbar-nav navbar-right ">
+                    <li><a href="<?php echo $this->baseUrl('/user/auth/logout'); ?>"><span class="glyphicon glyphicon-off"></span> Sair</a></li>
+                  </ul>
+
+
+                  <?php endif; ?>
+                </div><!-- /.navbar-collapse -->
+              </div><!-- /.container-fluid -->
+            </nav>
+
+            <section id="content" class="row">
+                <section class="span12">
+                    <?php if( $this->authStatus ) {echo '<small>Login: ' . $this->userNome2 .'</small>'; } ?>
+                    <?php echo $this->Layout()->content; ?>
+                </section>
+            </section>
+            
+            <!--
+            <div id="dialog" title="Excluir">
+              <p>Deseja mesmo excluir o funcionário?</p>
+            </div> -->
+
+
+
+        </section>
+
+        <script type="text/javascript">
+            var BASEURL = "<?php echo $this->baseUrl("/"); ?>";
+        </script>
+		<script type="text/javascript">
+			//bkLib.onDomLoaded(function() { new nicEditor({fullPanel : true}).panelInstance('conteudo'); });
+
+              $(function() {
+    
+    $( "#dialog" ).dialog({
+      resizable: false,
+      height:161,
+      modal: true,
+      buttons: {
+        "OK": function() {
+          $( this ).dialog( "close" );
+        },
+        Cancelar: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+
+
+  });
+
+
+      $( document ).ready(function() {
+
+
+
+      });
+
+		</script>
+
+
+    </body>
+</html>
