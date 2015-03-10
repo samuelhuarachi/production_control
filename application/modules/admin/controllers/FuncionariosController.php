@@ -32,39 +32,75 @@ class Admin_FuncionariosController extends SON_Controller_Action
         $this->_redirect('/admin/funcionarios/visualizar');
     }
 
+    public function excluirferiasAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+        $this->_dbFerias = new Application_Model_Ferias();
+        $feriasID = $this->_request->getParam('id', 0);
+        $userID = $this->_request->getParam('userid', 0);
+
+        $this->_dbFerias->delete($feriasID);
+        $this->_redirect('admin/funcionarios/editar/id/'.$userID);
+    }
+
+    public function editarferiasAction() {
+        $funcoes = new Funcoes_Geral();
+        $feriasID = $this->_request->getParam('id', 0);
+        $userID = $this->_request->getParam('userid', 0);
+        $this->_dbFerias = new Application_Model_Ferias();
+        $feriasDados = $this->_dbFerias->find($feriasID);
+
+        $this->view->dias =  $funcoes->diff2(date('d/m/Y',strtotime($feriasDados['inicio'])) , date('d/m/Y',strtotime($feriasDados['fim']))  );
+        
+        $feriasDados['inicio'] = $funcoes->volta_data_ao_normal($feriasDados['inicio']);
+        $feriasDados['fim'] = $funcoes->volta_data_ao_normal($feriasDados['fim']);
+
+        $formFerias = new SON_Form_Ferias();
+        $formFerias->populate($feriasDados);
+
+        if($this->_request->isPost() ) {
+            if($formFerias->isValid($this->_request->getPost())) {
+                $data = $formFerias->getValues();
+                unset($data['ferias']);
+                $data['id'] = $feriasID;
+                $data['inicio'] = $funcoes->formata_data_para_padrao_mysql($data['inicio']);
+                $data['fim'] = $funcoes->formata_data_para_padrao_mysql($data['fim']);
+
+                $this->_dbFerias->save($data);
+
+                $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">Os dados das férias foram atualizados</div>");
+                $this->_redirect('admin/funcionarios/editarferias/id/'.$feriasID.'/userid/' . $userID);
+            }
+        }
+
+        $this->view->formFerias = $formFerias;
+        $this->view->userID = $userID;
+
+    }
+
     public function editarAction() 
     {
         $funcoes = new Funcoes_Geral();
         $this->_dbUser = new Application_Model_User();
+        $this->_dbFerias = new Application_Model_Ferias();
         $funcionario = $this->_dbUser->find($this->_request->getParam('id', 0));
 
+        $formFerias = new SON_Form_Ferias();
         $formularioFuncionarios = new SON_Form_Funcionarios();
         $formularioFuncionarios->getElement('password')->removeValidator('NotEmpty');
         $formularioFuncionarios->getElement('password')->setRequired(false);
 
-
-        if($funcionario){
+        if($funcionario) {
             $funcionario['0']['admissao'] = $funcoes->volta_data_ao_normal($funcionario['0']['admissao']);
             $formularioFuncionarios->populate($funcionario['0']);
         }
         
-
-
-        //Trata da atualização das infomrações do usuário
-        if($this->_request->isPost()) {
-        
+        //Trata da atualização das infomrações do funcionário
+        if($this->_request->isPost() && isset($_POST['funcionarios'])) {
             if($formularioFuncionarios->isValid($this->_request->getPost())){
-                //$data = $formularioFuncionarios->getValues();
-                //$this->_db->save($data);
-
                 $dataUser = $formularioFuncionarios->getValues(); // Informações que serão inseridas na tabela dos usuários
-                //
                 $dataUser['id'] = $this->_request->getParam('id', 0);
-
-
-
                 $dataFuncionarios = array(); // Informações que serão inseridas na tabela dos funcionários
-
                 $dataFuncionarios['id'] = (int)'11111111111111';
                 $dataFuncionarios['id_user'] = (int)$dataUser['id'];
                 $dataFuncionarios['rg'] = $dataUser['rg'];
@@ -72,23 +108,17 @@ class Admin_FuncionariosController extends SON_Controller_Action
                 $dataFuncionarios['admissao'] = $funcoes->formata_data_para_padrao_mysql($dataUser['admissao']);
                 $dataFuncionarios['salario'] = $dataUser['salario'];
                 $dataFuncionarios['cargo'] = $dataUser['cargo'];
-
                 unset($dataUser['cargo']);
                 unset($dataUser['salario']);
                 unset($dataUser['rg']);
                 unset($dataUser['data_nascimento']);
                 unset($dataUser['admissao']);
-                
-
+                unset($dataUser['funcionarios']);
                 $this->_dbUser = new Application_Model_User();
                 $this->_dbUserDbtable = new Application_Model_DbTable_User();
                 $this->_dbUser->save($dataUser); //salva informações no banco de dados
-
                 $this->_dbFuncionarios = new Application_Model_Funcionarios();
                 $this->_dbFuncionarios->save($dataFuncionarios); //salva informações no banco de dados
-                
-
-
                 //Flash mensager avisando que o usuário foi cadastrado com sucesso
                 $this->_helper->flashMessenger->addMessage("O funcionário(a) ".$dataUser['nome']." foi atualizado com sucesso");
                 //Redireciona
@@ -96,15 +126,38 @@ class Admin_FuncionariosController extends SON_Controller_Action
             }
         }
 
+        //Trata da atualização das infomrações das férias
+        if($this->_request->isPost() && isset($_POST['ferias'])) {
+            if($formFerias->isValid($this->_request->getPost())){
+                $dataFerias = $formFerias->getValues();
+                unset($dataFerias['ferias']);
+                $dataFerias['inicio'] = $funcoes->formata_data_para_padrao_mysql($dataFerias['inicio']);
+                $dataFerias['fim'] = $funcoes->formata_data_para_padrao_mysql($dataFerias['fim']);
+                $dataFerias['id_user'] = (int)$this->_request->getParam('id', 0);
+                $this->_dbFerias->save($dataFerias);
+                $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">Férias adicionadas no sistema</div>");
+                $this->_redirect('admin/funcionarios/editar/id/' . $this->_request->getParam('id', 0));
+
+            }
+        }
 
 
 
         $formularioFuncionarios->getElement('submit')->setLabel('Atualizar as informações do funcionário');
+        $formFerias->getElement('submit')->setLabel('Adicionar férias');
+        $formFerias->getElement('observacoes')->setOptions(array('cols' => '30', 'rows' => '4'));
         $this->view->formularioFuncionarios = $formularioFuncionarios;
+        $this->view->formFerias = $formFerias;
+        $this->view->userFerias =  $this->_dbFerias->getFerias($this->_request->getParam('id', 0));
+        $this->view->funcoes = $funcoes;
+        $this->view->userID = $this->_request->getParam('id', 0);
+
+
     }
 
     public function visualizarAction()
     {
+        $this->view->funcoes = new Funcoes_Geral();
         $this->_dbUser = new Application_Model_User();
         $this->view->registros = $this->_dbUser->search(array('page' => $this->_request->getParam('pagina', 1))); 
     

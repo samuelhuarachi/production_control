@@ -28,8 +28,6 @@ class Admin_AdmincController extends SON_Controller_Action
         $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-danger\" role=\"alert\">O admin foi deletado do sistema</div>");
 
         $this->_redirect('/admin/adminc/visualizar');
-
-
     }
 
     public function visualizarAction() {

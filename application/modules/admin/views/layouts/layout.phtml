@@ -51,21 +51,25 @@
                   <ul class="nav navbar-nav">
                     <li <?php if($controllerValue == 'index') echo'class="active"';  ?> ><a href="<?php echo $this->baseUrl('/admin'); ?>">Inicial<span class="sr-only">(current)</span></a></li>
                     <li <?php if($controllerValue == 'projetos') echo'class="active"';  ?>><a href="<?php echo $this->baseUrl('/admin/projetos'); ?>">Projetos</a></li>
+                    
+                    <!-- Funcionários -->
                     <li  <?php if($controllerValue == 'funcionarios') {echo'class="dropdown active"';}else{echo'class="dropdown"'; }  ?>  >
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Funcionários<span class="caret"></span></a>
                       <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo $this->baseUrl('/admin/funcionarios/cadastrar'); ?>">Cadastrar</a></li>
                         <li><a href="<?php echo $this->baseUrl('/admin/funcionarios/visualizar'); ?>">Visualizar</a></li>
-
+                        
                       </ul>
                     </li>
                     
 
+                    <!-- Clientes -->
                     <li  <?php if($controllerValue == 'clientes') {echo'class="dropdown active"';}else{echo'class="dropdown"'; }  ?>  >
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Clientes<span class="caret"></span></a>
                       <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo $this->baseUrl('/admin/clientes/cadastrar'); ?>">Cadastrar</a></li>
                         <li><a href="<?php echo $this->baseUrl('/admin/clientes/visualizar'); ?>">Visualizar</a></li>
+                        <li><a href="<?php echo $this->baseUrl('/admin/projetos/adicionar'); ?>">Projetos</a></li>
                       </ul>
                     </li>
 
@@ -78,7 +82,24 @@
                       </ul>
                     </li>
 
+                    <li <?php if($controllerValue == 'relatorios') {echo'class="dropdown active"';} else { echo'class="dropdown"'; }   ?> >
 
+                      <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="<?php echo $this->baseUrl('/admin/relatorios'); ?>">Relatórios<span class="caret">
+                          <span class="sr-only">(current)</span></a>
+
+                      <ul class="dropdown-menu" role="menu">
+                        <li>
+                          <a href="<?php echo $this->baseUrl('admin/relatorios/tgnp'); ?>">Tempo gasto nos projetos</a>
+                        </li>
+                        <li>
+                          <a href="<?php echo $this->baseUrl('/admin/adminc/visualizar'); ?>">Projetos realizados</a>
+                        </li>
+                        <li>
+                          <a href="<?php echo $this->baseUrl('/admin/adminc/visualizar'); ?>">Etapas realizadas pelos funcionários</a>
+                        </li>
+                        
+                      </ul>
+                    </li>
 
                   </ul>
                   

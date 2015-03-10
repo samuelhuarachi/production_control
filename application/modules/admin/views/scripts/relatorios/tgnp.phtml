@@ -1,0 +1,91 @@
+<p><h3>Escolha o projeto</h3></p>
+
+<table class="table table-hover">
+
+<tr>
+	<td><strong>Nome</strong></td>
+	<td><strong>Data Inicial</strong></td>
+	<td><strong>Data Final</strong></td>
+	<td><strong>Concluído</strong></td>
+	<td></td>
+	<td><strong>Dias restantes</strong></td>
+</tr>
+
+<?php
+ foreach ($this->registros as $projetos):
+$mostrar_conteudo = 1;
+
+
+if($this->filtroParam == "concluido"  &&  $this->projetos($projetos['id']) != 100)  {
+	$mostrar_conteudo = 0;
+}
+
+
+if($this->filtroParam == "andamento"  &&  $this->projetos($projetos['id']) == 100 ) {
+	$mostrar_conteudo = 0;
+}
+
+
+if($this->filtroParam == 'atrasado' &&  $this->projetos($projetos['id']) == 100){
+ 	$mostrar_conteudo = 0;
+}
+
+
+
+if($mostrar_conteudo == 1) {
+?>
+	<tr>
+		<td>  <a href="<?php echo $this->baseUrl("admin/relatorios/tgnpprojeto/id/" . $projetos['id']); ?>"> <?php echo '<strong>'.$projetos['nome_cliente'] . '</strong> - ' . $projetos['nome']; ?> </a></td>
+		<td><?php echo date('d/m/Y',strtotime($projetos['inicio'])); ?></td>
+		<td><?php echo date('d/m/Y',strtotime($projetos['fim'])); ?></td>
+
+		<td>
+			
+			<div class="progress">
+			  <div class="progress-bar " role="progressbar" aria-valuenow="<?php echo $this->projetos($projetos['id']); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $this->projetos($projetos['id']); ?>%;">
+			    <?php echo $this->projetos($projetos['id']); ?>%
+			  </div>
+			</div>
+
+		</td>
+
+		<td>
+			<?php 
+
+			$data_atual =  strtotime(date("m/d/Y")); 
+			$data_projeto_entrega = strtotime(   $projetos['fim']   );
+
+			if($this->projetos($projetos['id']) < 100) {
+				echo ' <span class="label label-warning">Em andamento</span> ';
+			}
+
+			if(  ($data_atual > $data_projeto_entrega) && ($this->projetos($projetos['id']) < 100)  ) {
+				echo ' <span class="label label-danger">Atrasado</span> ';
+			}
+
+			if ($this->projetos($projetos['id']) == 100)  {
+				echo ' <span class="label label-success">Concluído</span> ';
+			}
+			 ?>
+			
+		</td>
+		<td><?php 
+			$data1 = new DateTime( date('Y/m/d',strtotime($projetos['fim'])) );
+	        $data2 = new DateTime(  date("Y/m/d")	 );
+	        $intervalo = $data1->diff( $data2 );
+	        echo $intervalo->d;
+	        if(  ($data_atual > $data_projeto_entrega) && ($this->projetos($projetos['id']) < 100)  ) {
+				echo ' <span class="label label-danger">Atrasado</span> ';
+			}
+
+		 ?></td>
+	</tr>
+
+<?php
+
+}
+ endforeach;
+ ?>
+
+
+</table>

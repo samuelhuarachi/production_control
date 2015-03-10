@@ -55,6 +55,7 @@ class User_IndexController extends SON_Controller_Action
 
 
         $filtroSQL = array();
+        $filtroSQL['lancar = ?'] = 1;
         $data_atual =  $funcoes->formata_data_para_padrao_mysql(date("d/m/Y")); 
         if($filtroParam == 'atrasado') {
             $filtroSQL['fim <= ?'] = $data_atual;

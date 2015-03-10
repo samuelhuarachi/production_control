@@ -13,6 +13,9 @@ class Admin_ProjetosController extends SON_Controller_Action
         if ($this->_helper->FlashMessenger->hasMessages()) {
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
+
+        $this->filtros = new Zend_Session_Namespace('filtros');
+        $this->funcoes = new Funcoes_Geral();
     }
 
     public function editaretapaAction() {
@@ -66,6 +69,135 @@ class Admin_ProjetosController extends SON_Controller_Action
 
     }
 
+    public function adicionarAction() {
+        
+        $frm = new SON_Form_Projetos();
+        $this->_dbProjetos = new Application_Model_Projetos();
+
+        if($this->_request->isPost()) {
+            if(!isset($_POST['pesquisa'])) {
+                if ($frm->isValid($this->_request->getPost())) {
+                    $data = $frm->getValues(); // Informações que serão inseridas
+                    
+                    $inicio = strtotime(  str_replace('/', '-',$data['inicio']) );
+                    $data['inicio'] = date( 'Y-m-d H:i:s', $inicio );
+
+                    $fim = strtotime(  str_replace('/', '-',$data['fim']) );
+                    $data['fim'] = date( 'Y-m-d H:i:s', $fim );
+                    $data['lancar'] = 0;
+
+                    $this->_dbProjetos->save($data); //salva informações no banco de dados
+
+                    //Flash mensager avisando que o usuário foi cadastrado com sucesso
+                    $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">O projeto ".$data['nome']." foi inserido no sistema</div>");
+                    //Redireciona
+                    $this->_redirect('/admin/projetos/adicionar');
+
+                }
+            }
+
+            if(isset($_POST['pesquisa'])) {
+                if($_POST['date_de'] <> "")
+                {
+                    $this->filtros->de = $this->funcoes->formata_data_para_padrao_mysql( $_POST['date_de']);
+                } else {
+                    throw new Exception('Data inválida');
+                }
+
+                if($_POST['date_ate'] <> ""){
+                    $this->filtros->ate =  $this->funcoes->formata_data_para_padrao_mysql( $_POST['date_ate']);
+                } else {
+                    throw new Exception('Data inválida');
+                }
+
+                if($_POST['empresas'] <> "0"){
+                    $this->filtros->empresa = (int)$_POST['empresas'];
+                } else {
+                    $this->filtros->empresa = 0;
+                }
+
+            }
+        }
+
+        $this->carregainfocomum();
+
+
+        $frm->getElement('submit')->setLabel('Adicionar projeto');
+        $this->view->frm = $frm;
+
+
+
+    }
+
+    public function lancarAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+        $id = $this->_request->getParam('id', '0');
+        $this->_dbProjetos = new Application_Model_Projetos();
+
+        $data['id'] = (int)$id;
+        $data['lancar'] = 1;
+
+        $this->_dbProjetos->save($data);
+        $this->_redirect('admin/projetos/add');
+
+    }
+
+    public function carregainfocomum() {
+        // Gera na view as variáveis
+        // filtroParam, 
+        // registros
+        //data_de
+        //data_ate
+        $this->_dbClientes = new Application_Model_Clientes();
+        
+
+        //Se nao existir a sesseão de
+        if(!isset($this->filtros->de)) {
+            $this->filtros->de = date('Y-m-d H:i:s', strtotime("-15 days"));
+        }
+        //Se não existir a sessão até
+        if(!isset($this->filtros->ate)) {
+            $this->filtros->ate = date('Y-m-d H:i:s', strtotime("+15 days"));
+        }
+        $this->view->data_de = date('d/m/Y',strtotime($this->filtros->de));
+        $this->view->data_ate = date('d/m/Y',strtotime($this->filtros->ate));
+
+
+
+        $this->_dbProjetos = new Application_Model_Projetos();
+        $filtroParam = $this->_request->getParam('filtro', '0');
+        $this->view->filtroParam = $filtroParam;
+
+        $filtroSQL = array();
+        $filtroSQL['lancar = ?'] = 0;
+        $data_atual =  $this->funcoes->formata_data_para_padrao_mysql(date("d/m/Y")); 
+        if($filtroParam == 'atrasado') {
+            $filtroSQL['fim <= ?'] = $data_atual;
+        }
+        if($this->filtros->de <> "") {
+            $filtroSQL['inicio >= ?'] = $this->filtros->de;
+        }
+        if($this->filtros->ate <> "") {
+            $filtroSQL['inicio <= ?'] = $this->filtros->ate;
+        }
+        if ($this->filtros->empresa <> 0) {
+            $filtroSQL['id_cliente = ?'] = $this->filtros->empresa;
+        }
+
+        //Listar os projetos
+        $registros = $this->_dbProjetos->search(array('page' => $this->_request->getParam('pagina', 1),
+                'conditions' => $filtroSQL
+            )); 
+        $this->view->registros = $registros;
+        $this->view->clientes = $this->_dbClientes->fetchPairs();
+    }
+
+    public function addAction() {
+        $this->carregainfocomum();
+
+    }
+
     public function indexAction()
     {
         $this->_dbProjetos = new Application_Model_Projetos();
@@ -112,6 +244,7 @@ class Admin_ProjetosController extends SON_Controller_Action
 
 
         $filtroSQL = array();
+        $filtroSQL['lancar = ?'] = 1;
         $data_atual =  $funcoes->formata_data_para_padrao_mysql(date("d/m/Y")); 
         if($filtroParam == 'atrasado') {
             $filtroSQL['fim <= ?'] = $data_atual;
@@ -277,38 +410,8 @@ class Admin_ProjetosController extends SON_Controller_Action
         $this->view->idProjeto = $this->_request->getParam('id', 0);
     }
 
-    public function adicionarAction(){
+    
 
-        $frm = new SON_Form_Projetos();
-
-
-        if($this->_request->isPost()) {
-
-            if($frm->isValid($this->_request->getPost())){
-                $data = $frm->getValues(); // Informações que serão inseridas
-                $this->_dbProjetos = new Application_Model_Projetos();
-
-
-                $inicio = strtotime(  str_replace('/', '-',$data['inicio']) );
-                $data['inicio'] = date( 'Y-m-d H:i:s', $inicio );
-
-                $fim = strtotime(  str_replace('/', '-',$data['fim']) );
-                $data['fim'] = date( 'Y-m-d H:i:s', $fim );
-
-                $this->_dbProjetos->save($data); //salva informações no banco de dados
-
-                //Flash mensager avisando que o usuário foi cadastrado com sucesso
-                $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">O projeto ".$data['nome']." foi inserido no sistema</div>");
-                //Redireciona
-                $this->_redirect('/admin/projetos');
-
-            }
-        }
-
-        $frm->getElement('submit')->setLabel('Adicionar projeto');
-        $this->view->frm = $frm;
-
-    }
 
 }
 

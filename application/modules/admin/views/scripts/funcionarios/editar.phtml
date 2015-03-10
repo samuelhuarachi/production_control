@@ -5,17 +5,19 @@
   <li class="active"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>  Editar</li>
 </ol>
 
-
-<br>
-
-
-
+<?php if (count($this->messages)) : ?>
+    <br>
+    <?php foreach ($this->messages as $message) : ?>
+        <?php echo $message; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 <style>
 	.func_cadastro {
 		width: 300px;
 		margin-left: 66px;
 		margin-bottom: 200px;
+		float: left;
 	}
 	
 	.errors {
@@ -28,7 +30,27 @@
 		margin-bottom: 20px;
 	}
 
+	.ferias {
+		width: 730px;
+		float: left;
+		margin-left: 66px;
+		border: 1px solid #c2c2c2;
+		padding: 20px;
 
+		-webkit-box-shadow: 10px 10px 66px -21px rgba(0,0,0,0.75);
+		-moz-box-shadow: 10px 10px 66px -21px rgba(0,0,0,0.75);
+		box-shadow: 10px 10px 66px -21px rgba(0,0,0,0.75);
+
+	}
+	.frmferias {
+		width: 200px;
+		float: left;
+	}
+	
+	.listaferias {
+		float: left;
+		margin-left: 33px;
+	}
 </style>
 
 
@@ -38,17 +60,63 @@
 
 </p>
 <div class="func_cadastro">
-
-
-
+<h3>Dados do funcionário</h3>
 <?php 
 echo $this->formularioFuncionarios;
 ?>
 </div>
+
+
+<div class="ferias">
+	<div class="frmferias">
+		<?php echo $this->formFerias ?>
+	</div>
+	<div class="listaferias">
+		<h3>Log das férias</h3>
+
+		<table class="table table-hover">
+			<tr>
+				<td></td>
+				<td><strong>Inicio</strong></td>
+				<td><strong>Fim</strong></td>
+				<td><strong>Dias</strong></td>
+				<td></td>
+			</tr>
+			<?php
+			if($this->userFerias) {
+				foreach ($this->userFerias as $key => $value) {
+					?>
+					<tr>
+						<td><a href="<?php echo $this->baseUrl('/admin/funcionarios/editarferias/id/'.$value['id'].'/userid/'.$this->userID); ?>">
+    <button class="btn btn-default btn-xs">Observaçãoes</button></a> <?php if($value['observacoes'] != "") { echo '<font color="red">*</font>'; } ?> </td>
+    					<td><?php echo $this->funcoes->volta_data_ao_normal($value['inicio']); ?></td>
+    					<td><?php echo $this->funcoes->volta_data_ao_normal($value['fim']); ?></td>
+						<td><?php echo $this->funcoes->diff2(date('d/m/Y',strtotime($value['inicio'])) , date('d/m/Y',strtotime($value['fim']))  ); ?></td>
+    					<td>
+							<a href="<?php echo $this->baseUrl('/admin/funcionarios/excluirferias/id/'.$value['id'].'/userid/'.$this->userID); ?>" onclick="return confirm('Confirmar exclusão?')">
+			    <button class="btn btn-danger btn-xs">  <span class="glyphicon glyphicon-trash" aria-hidden="true" ></span> Excluir</button></a>
+			    			
+			    			</td>
+					</tr>
+
+
+					<?php
+				}
+			}
+			?>
+
+		</table>
+	</div>
+
+</div>
+
+
 <script>
 	$(document).ready(function () {
 	    /* assuming that text input datePicker would have id='datePicker' */
 	    $( "#admissao" ).datepicker({ dateFormat: 'dd/mm/yy' });
-	     $('#salario').mask('000.000.000.000.000,00', {reverse: true});
+	    $('#salario').mask('000.000.000.000.000,00', {reverse: true});
+	    $( "#inicio" ).datepicker({ dateFormat: 'dd/mm/yy' });
+	    $( "#fim" ).datepicker({ dateFormat: 'dd/mm/yy' });
 	});
 </script>

@@ -44,12 +44,18 @@ class User_EtapasController extends SON_Controller_Action
         $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">Status alterado!</div>");
 
 
+        if($status == 'concluido') { 
+            $modelConclusao = new Application_Model_Logconclusao();
+            $findLog = $modelConclusao->find($data['id']);
+
+        }
+
         //Redireciona para a página anterior
         $this->_redirect('user/projetos/visualizar/id/' . $etapaInfo['id_projetos']);
         //url back: user/projetos/visualizar/id/21
 
 
-        echo 'mudando status';
+        
     }
 
     public function removerusuarioetapaAction() {

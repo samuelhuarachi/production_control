@@ -1,0 +1,39 @@
+<ol class="breadcrumb">
+  <li class="active"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Funcionários</li>
+  <li class="active"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>  Férias</li>
+	<li ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>  Editar</li>
+</ol>
+
+<?php if (count($this->messages)) : ?>
+    <br>
+    <?php foreach ($this->messages as $message) : ?>
+        <?php echo $message; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+
+
+<a href="<?php echo $this->baseUrl('admin/funcionarios/editar/id/'.$this->userID); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+
+<style>
+	.formferias {
+		width: 300px;
+		padding-left: 100px;
+	}
+</style>
+
+<div class="formferias">
+<p><strong><?php echo $this->dias ?> dias de férias</strong></p>
+<?php 
+echo $this->formFerias;
+ ?>
+
+</div>
+
+
+ <script>
+	$(document).ready(function () {
+	    $( "#inicio" ).datepicker({ dateFormat: 'dd/mm/yy' });
+	    $( "#fim" ).datepicker({ dateFormat: 'dd/mm/yy' });
+	});
+</script>

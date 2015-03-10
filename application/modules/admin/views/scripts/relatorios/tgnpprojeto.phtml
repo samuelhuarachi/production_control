@@ -1,0 +1,24 @@
+<a href="#">Concluídos + Em Andamento</a> | <a href="#">Concluídos</a> | <a href="#">Em Andamento</a>
+
+<br>
+<br>
+<br>
+
+<p><strong>Cliente</strong>
+<?php 
+echo $this->cliente['nome'];?></p>
+
+<p><strong>Nome do projeto</strong>
+<?php
+echo $this->projeto['nome'];
+?></p>
+
+<p><strong>Etapas</strong></p>
+<?php 
+foreach ($this->etapas as $key => $value) {
+	echo '<p>';
+	echo $value['nome'] . $value['inicio'] . $value['fim'] . $value['status'];
+	echo '</p>';
+}
+
+ ?>

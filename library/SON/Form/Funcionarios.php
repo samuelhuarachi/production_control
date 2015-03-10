@@ -1,8 +1,5 @@
 <?php
-
-
 class SON_Form_Funcionarios extends Zend_Form {
-
 
     public function init(){
 
@@ -151,7 +148,11 @@ class SON_Form_Funcionarios extends Zend_Form {
                     ))
                 ->setAttrib('title', 'Informe o cargo');
         $this->addElement($cargo);
-        
+
+
+        $this->addElement('hidden', 'funcionarios', array(
+                    'value'      => 'hello'
+                ));
 
         //Submit
         $submit = new Zend_Form_Element_Submit('submit');

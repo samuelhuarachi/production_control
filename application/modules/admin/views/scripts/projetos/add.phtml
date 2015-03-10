@@ -1,31 +1,10 @@
 <ol class="breadcrumb">
-  <li  class="active"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Clientes</li>
+  <li  class="active"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Projetos</li>
   <li><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>  Adicionar</li>
 </ol>
 
+<a href="<?php echo $this->baseUrl('/admin/projetos'); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
 
-<style>
-	.frm1 {
-		width: 300px;
-		float: left;
-		margin-left: 66px;
-	}
-	.errors {
-		list-style:none;
-		color:red;
-		padding:0;
-	}
-</style>
-<br>
-
-<div class="frm1">
-<?php 
-
-echo $this->frm;
-
- ?>	
-
-</div>
 <script>
 	$(document).ready(function () {
 	    /* assuming that text input datePicker would have id='datePicker' */
@@ -33,7 +12,7 @@ echo $this->frm;
 	    $( ".data_final" ).datepicker({ dateFormat: 'dd/mm/yy' });
 	    $( "#date_de" ).datepicker({ dateFormat: 'dd/mm/yy' });
 	    $( "#date_ate" ).datepicker({ dateFormat: 'dd/mm/yy' });
-
+	    
 	});
 
 </script>
@@ -43,17 +22,10 @@ echo $this->frm;
 	.filtrosp {
 		margin-bottom: 10px;
 		float: right;
-		width: 100%;
-		margin-bottom: 20px;
-		margin-top: 20px;
-	}
-
-	.listaprojetos {
-		margin-bottom: 100px;
 	}
 </style>
 <div class="filtrosp">
-	<form class="form-inline" method="post" action="<?php echo $this->baseUrl("admin/projetos/adicionar"); ?>">
+	<form class="form-inline" method="post" action="<?php echo $this->baseUrl("admin/projetos/add"); ?>">
 	  <div class="form-group">
 	  	<select class="form-control" name="empresas">
 	  	<option value="0" label="Todos os clientes" <?php if($this->valor == 0) {echo 'selected';} ?>>Todos os clientes</option>
@@ -67,7 +39,7 @@ echo $this->frm;
 		 ?>
 
 		</select>
-	  	<input type="hidden" name="pesquisa" value="pesauiqss">
+	  	
 	    <input type="text" class="form-control" name="date_de" id="date_de" placeholder="de" value="<?php echo $this->data_de; ?>">
 	  </div>
 	  <div class="form-group">
@@ -82,7 +54,8 @@ echo $this->frm;
 	<table class="table table-hover">
 
 		<tr>
-			<td><strong>Cod</strong></td>
+			<td></td>
+			<td>Cod.</td>
 			<td><strong>Nome</strong></td>
 			<td><strong>Data Inicial</strong></td>
 			<td><strong>Data Final</strong></td>
@@ -113,17 +86,17 @@ echo $this->frm;
 		if($mostrar_conteudo == 1) {
 		?>
 			<tr>
+
+				<td> <a href="<?php echo $this->baseUrl("admin/projetos/lancar/id/" . $projetos['id']); ?>"><button class="btn btn-default btn-xs"> Adicionar</button> </a>
+				</td>
 				<td><?php echo $projetos['codigo_projeto']; ?></td>
 				<td>  <a href="<?php echo $this->baseUrl("admin/projetos/etapas/id/" . $projetos['id']); ?>"> <?php echo '<strong>'.$projetos['nome_cliente'] . '</strong> - ' . $projetos['nome']; ?> </a></td>
 				<td><?php echo date('d/m/Y',strtotime($projetos['inicio'])); ?></td>
 				<td><?php echo date('d/m/Y',strtotime($projetos['fim'])); ?></td>
 
-				
-				
 				<td><?php 
 					$data_atual =  strtotime(date("m/d/Y")); 
 					$data_projeto_entrega = strtotime(   $projetos['fim']   );
-
 					$data1 = new DateTime( date('Y/m/d',strtotime($projetos['fim'])) );
 			        $data2 = new DateTime(  date("Y/m/d")	 );
 			        $intervalo = $data1->diff( $data2 );
@@ -133,10 +106,6 @@ echo $this->frm;
 					}
 
 				 ?></td>
-				 <td>
-							 <a href="<?php echo $this->baseUrl("admin/projetos/deletarprojeto/id/" . $projetos['id']); ?>" onclick="return confirm('Você quer excluir esse projeto?')">
-			    <button class="btn btn-danger btn-xs">  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Excluir</button></a>
-					</td>
 			</tr>
 
 		<?php
@@ -148,6 +117,3 @@ echo $this->frm;
 	</table>
 
 </div>
-
-
-
