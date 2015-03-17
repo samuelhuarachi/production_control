@@ -2,7 +2,6 @@
 
 class User_IndexController extends SON_Controller_Action
 {
-
     public function init()
     {
         parent::init();
@@ -21,6 +20,7 @@ class User_IndexController extends SON_Controller_Action
         $filtros = new Zend_Session_Namespace('filtros');
         $funcoes = new Funcoes_Geral();
         $filtroParam = $this->_request->getParam('filtro', '0');
+        $idGrupo = $this->_request->getParam('idgrupo', '0');
         $this->view->filtroParam = $filtroParam;
 
 
@@ -55,7 +55,6 @@ class User_IndexController extends SON_Controller_Action
 
 
         $filtroSQL = array();
-        $filtroSQL['lancar = ?'] = 1;
         $data_atual =  $funcoes->formata_data_para_padrao_mysql(date("d/m/Y")); 
         if($filtroParam == 'atrasado') {
             $filtroSQL['fim <= ?'] = $data_atual;
@@ -67,15 +66,17 @@ class User_IndexController extends SON_Controller_Action
             $filtroSQL['inicio <= ?'] = $filtros->ate;
         }
         //Gerencia os filtros da pesquisa - fim
-
+        
+        $filtroSQL['id_grupo = ?'] = (int)$idGrupo;
 
         $registros = $this->_dbProjetos->search(array('page' => $this->_request->getParam('pagina', 1),
                 'conditions' => $filtroSQL
             )); 
 
-        
         $this->view->registros = $registros;
         $this->view->id_usuario = $this->userId;
+        $this->view->idGrupo = $idGrupo;
+
         
     }
 

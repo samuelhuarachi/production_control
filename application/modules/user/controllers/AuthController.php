@@ -57,7 +57,7 @@ class User_AuthController extends SON_Controller_Action
                         $dataAuth= $authAdapter->getResultRowObject(null, 'password');
                         
                         $auth->getStorage()->write($dataAuth);
-                        $this->_redirect('/user');
+                        $this->_redirect('user/grupos/visualizar');
                     } else {
                         $this->view->error = 'Usuário ou senha inválidos';
                         $form->populate($data);
@@ -72,7 +72,7 @@ class User_AuthController extends SON_Controller_Action
                     $pesquisa = $this->_dbUser->findbyEmail($data['email']);
                     if($pesquisa) {
                         $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-danger\" role=\"alert\">Esse e-mail já está cadastrado no sistema</div>");
-                        $this->_redirect('/user');
+                        $this->_redirect('user/grupos/visualizar');
                     }else {
 
                         $dataFuncionarios = array(); // Informações que serão inseridas na tabela dos funcionários
@@ -102,7 +102,7 @@ class User_AuthController extends SON_Controller_Action
                         //Flash mensager avisando que o usuário foi cadastrado com sucesso
                         $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">O funcionário(a) ".$data['nome']." foi cadastrado no sistema</div>");
                         //Redireciona
-                        $this->_redirect('/user');
+                        $this->_redirect('user/grupos/visualizar');
 
 
 

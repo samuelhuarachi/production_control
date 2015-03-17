@@ -1,0 +1,75 @@
+<div class="filtrosp">
+	<form class="form-inline" method="post" action="<?php echo $this->baseUrl("user/grupos/visualizar"); ?>">
+	  <div class="form-group">
+	    <input type="text" class="form-control" name="codigo" id="codigo" placeholder="Digite o código do projeto" value="<?php echo $this->codigo ?>">
+	  </div>
+	
+	  <div class="form-group">
+	    <input type="text" class="form-control" name="date_de" id="date_de" placeholder="de" value="<?php echo $this->de; ?>">
+	  </div>
+	  <div class="form-group">
+	    <input type="text" class="form-control" name="date_ate" id="date_ate" placeholder="até" value="<?php echo $this->ate; ?>">
+	  </div>
+		<button type="submit" class="btn btn-default">Procurar</button>
+	</form>
+</div>
+
+<script>
+	$(document).ready(function () {
+	    /* assuming that text input datePicker would have id='datePicker' */
+	    $( "#date_de" ).datepicker({ dateFormat: 'dd/mm/yy' });
+	    $( "#date_ate" ).datepicker({ dateFormat: 'dd/mm/yy' });
+
+	});
+</script>
+
+<style>
+	.filtrosp {
+		margin-top: 10px;
+	}
+	.table {
+		width: 555px;
+	}
+</style>
+
+<table class="table table-hover">
+
+<tr>
+	<td><strong>Cliente</strong></td>
+	<td><strong>Código</strong></td>
+	<td>%</td>
+	<td><strong>Horas</strong></td>
+	<td><strong>Cadastro</strong></td>
+</tr>
+<br>
+<?php
+ foreach ($this->registros as $grupo):
+?>
+	<tr>
+		<td><?php echo $grupo['nome_cliente']; ?></td>
+		<td>
+			<a href="<?php echo $this->baseUrl("user/index/index/idgrupo/" . $grupo['id']); ?>"><?php echo $grupo['cod_grupo']; ?></a>
+		</td>
+		<td>
+		<?php //$p =$this->porcentagemgrupo($grupo['id']); ?>
+		<!-- <div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $p; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $p; ?>%;">
+		    <?php echo $p; ?>% completo
+		  </div>
+		</div> -->
+		
+		</td>
+		<td>
+			<?php //echo $this->gruposhoras($grupo['id']); ?>
+		</td>
+		<td>
+			<?php echo date( 'd/m/Y', strtotime($grupo['cadastro']) ); ?>
+		</td>
+	</tr>
+<?php
+ endforeach;
+ ?>
+
+</table>
+
+

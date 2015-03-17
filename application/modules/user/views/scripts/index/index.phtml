@@ -1,3 +1,7 @@
+<a href="<?php echo $this->baseUrl('user/grupos/visualizar'); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+
+
+
 <style>
 	.filtrosp {
 		margin-bottom: 20px;
@@ -6,9 +10,8 @@
 </style>
 
 <div class="filtrosp">
-	<form class="form-inline" method="post" action="<?php echo $this->baseUrl("user/index"); ?>">
+	<form class="form-inline" method="post" action="<?php echo $this->baseUrl("user/index/index/idgrupo/" . $this->idGrupo); ?>">
 	  <div class="form-group">
-	  	
 	  	
 	    <input type="text" class="form-control" name="date_de" id="date_de" placeholder="de" value="<?php echo $this->data_de; ?>">
 	  </div>
@@ -16,9 +19,9 @@
 	    <input type="text" class="form-control" name="date_ate" id="date_ate" placeholder="até" value="<?php echo $this->data_ate; ?>">
 	  </div>
 		<button type="submit" class="btn btn-default">Procurar</button>
-		<a href="<?php echo $this->baseUrl("user/index/index/filtro/atrasado"); ?>"><button type="button" name="atrasados" class="btn btn-danger btn-xs">Atrasados</button></a>
-		<a href="<?php echo $this->baseUrl("user/index/index/filtro/andamento"); ?>"><button type="button" name="em andamento" class="btn btn-warning btn-xs">Em andamento</button></a>
-		<a href="<?php echo $this->baseUrl("user/index/index/filtro/concluido"); ?>"><button type="button" name="concluidos" class="btn btn-success btn-xs">Concluídos</button></a>
+		<a href="<?php echo $this->baseUrl("user/index/index/filtro/atrasado/idgrupo/". $this->idGrupo); ?>"><button type="button" name="atrasados" class="btn btn-danger btn-xs">Atrasados</button></a>
+		<a href="<?php echo $this->baseUrl("user/index/index/filtro/andamento/idgrupo/". $this->idGrupo); ?>"><button type="button" name="em andamento" class="btn btn-warning btn-xs">Em andamento</button></a>
+		<a href="<?php echo $this->baseUrl("user/index/index/filtro/concluido/idgrupo/". $this->idGrupo); ?>"><button type="button" name="concluidos" class="btn btn-success btn-xs">Concluídos</button></a>
 	</form>
 </div>
 <br>
@@ -34,7 +37,11 @@
 	});
 </script>
 
-
+<style>
+	.table {
+		width: 666px;
+	}
+</style>
 
 <table class="table table-hover">
 
@@ -48,8 +55,6 @@
 </tr>
 
 <?php
-
-
  foreach ($this->registros as $projetos):
 $mostrar_conteudo = 1;
 
@@ -68,8 +73,6 @@ if($this->filtroParam == 'atrasado' &&  $this->projetos($projetos['id']) == 100)
  	$mostrar_conteudo = 0;
 }
 
-
-
 if($mostrar_conteudo == 1) {
 
 $minhasTarefas = $this->minhastarefas($projetos['id'], $this->id_usuario);
@@ -77,9 +80,10 @@ $tarefaspendentes = $this->tarefaspendentes($projetos['id'], $this->id_usuario);
 $tarefaspendentes2 = $this->tarefaspendentes2($projetos['id'], $this->id_usuario);
 $sedisponivel = $this->verificatarefasaberto($projetos['id']);
 
+
 ?>
 	<tr>
-		<td><a href="<?php echo $this->baseUrl("user/projetos/visualizar/id/" . $projetos['id']); ?>"><?php echo '<strong>'.$projetos['nome_cliente'] . '</strong> - ' . $projetos['nome']; ?></a>  <?php if ($tarefaspendentes) { echo '<small><i><font color="red">pendente</font></i></small>'; } else { if($tarefaspendentes2) { echo '<small><i><font color="red">pendente</font></i></small>'; } } 
+		<td><a href="<?php echo $this->baseUrl("user/projetos/visualizar/id/" . $projetos['id']."/idgrupo/" . $this->idGrupo); ?>"><?php echo $projetos['nome']; ?></a>  <?php if ($tarefaspendentes) { echo '<small><i><font color="red">pendente</font></i></small>'; } else { if($tarefaspendentes2) { echo '<small><i><font color="red">pendente</font></i></small>'; } } 
 
 		if($sedisponivel) {
 			echo ' <small><font color="#c2c2c2">disponível</font></small>';

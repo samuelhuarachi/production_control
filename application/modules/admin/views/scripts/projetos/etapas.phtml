@@ -3,7 +3,7 @@
   <li class="active"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>  Etapas</li>
 </ol>
 
-<a href="<?php echo $this->baseUrl('/admin/projetos'); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+<a href="<?php echo $this->baseUrl('admin/projetos/adicionar/idgrupo/'.$this->grupo_id); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
 <br>
 
 <style>
@@ -38,6 +38,26 @@
 
 </div>
 
+<style>
+	.bg-primary {
+		padding:10px;
+	}
+</style>
+<div class="grupo1">
+<p class="bg-primary">
+	<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+	<strong>Cliente: </strong>
+	<?php 
+	echo $this->clienteData[0]['nome'];
+	?>
+	<strong> Código: </strong>
+	<?php
+	echo $this->clienteData[0]['codigo_projeto'];
+	?>
+</p>
+</div>
+
+
 
 <div class="frm1">
 	<?php 
@@ -61,7 +81,7 @@
 	}
 </style>
 <div class="etapasp">
-	<a href="<?php echo $this->baseUrl('/admin/projetos/addetapas/id/' . $this->idProjeto); ?>"><button type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-plus" ></span>  Adicionar etapa</button></a></p>
+	<a href="<?php echo $this->baseUrl('/admin/projetos/addetapas/id/' . $this->idProjeto.'/idgrupo/'.$this->grupo_id); ?>"><button type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-plus" ></span>  Adicionar etapa</button></a></p>
 	
 	<table class="table table-hover">
 
@@ -73,13 +93,14 @@
 			<td><strong>Data Final</strong></td>
 			<td><strong>Status</strong></td> <!-- Concluído (verde) / 
 			Em andamento (laranja) / Pendente (vermelho) -->
-			<td></td>
+			<td><strong>Horas</strong></td>
+			<td><strong>Km/h</strong></td>
 		</tr>
 		<?php 
 
 			if($this->etapas[0]['id'] <> NULL) {
 				foreach ($this->etapas as $key => $value) {
-
+					$total_h_t = '---';
 					$usuario = $this->usuario((int)$value['id_funcionarios']);
 					if($usuario) {
 						$usuarioName = $usuario[0]['nome'];
@@ -88,22 +109,52 @@
 					}
 					# code...
 					echo '<tr>';
-					echo '<td> <a href="'.$this->baseUrl('admin/projetos/estapasexcluir/id/'.$value['id'].'/idprojeto/'.$this->idProjeto).'" onclick="return confirm(\'Você quer excluir essa etapa?\')"><span class=" glyphicon glyphicon-trash"></span></a></td>';
-					echo '<td><a href="'.$this->baseUrl('admin/projetos/editaretapa/id/' . $value['id'].'/idprojeto/'.$this->idProjeto).'">'.$value['nome'].'</a></td>';
+					echo '<td> <a href="'.$this->baseUrl('admin/projetos/estapasexcluir/id/'.$value['id'].'/idprojeto/'.$this->idProjeto.'/idgrupo/'.$this->grupo_id).'" onclick="return confirm(\'Você quer excluir essa etapa?\')"><span class=" glyphicon glyphicon-trash"></span></a></td>';
+					echo '<td><a href="'.$this->baseUrl('admin/projetos/editaretapa/id/' . $value['id'].'/idprojeto/'.$this->idProjeto.'/idgrupo/'.$this->grupo_id).'">'.$value['nome'].'</a></td>';
 					echo '<td>'.$usuarioName.'</td>';
 
-					echo '<td>'.date('d/m/Y',strtotime($value['inicio'])).'</td>';
-					echo '<td>'.date('d/m/Y',strtotime($value['fim'])).'</td>';
+					//Procura as datas na qual o projeto foi iniciado
+					//e a data na qual o projeto foi finalizado
+					$conclusao = $this->conclusaoetapa($value['id']);
+
+
+					if(isset($conclusao[0]['inicio'])){
+						echo '<td>'.date('d/m/Y H:i:s',strtotime($conclusao[0]['inicio'])).'</td>';
+					}
+					else {
+						echo '<td>---</td>';
+					}
+					if(isset($conclusao[0]['dia'])){
+						echo '<td>'.date('d/m/Y H:i:s',strtotime($conclusao[0]['dia'])).'</td>';
+					}else {
+						echo '<td>---</td>';
+					}
+					
+					//echo $this->horastrabalhadas($value['inicio'], $value['fim']);
 
 					if ($value['status'] == 'aberto') {
 						echo '<td><span class="label label-default">Aberto</span></td>';
 					}
 					if ($value['status'] == 'em andamento') {
 						echo '<td><span class="label label-warning">Em andamento</span></td>';
+						$total_h_t = $this->horastrabalhadas($conclusao[0]['inicio'], date('Y-m-d H:i:s'));
 					}
 					if ($value['status'] == 'concluido') {
 						echo '<td><span class="label label-success">Concluido</span></td>';
+
+						//$info_log = $this->conclusaoetapa($value['id']);
+						//$data_conclusao = $info_log[0]['dia'];
+						$total_h_t = $this->horastrabalhadas(   $conclusao[0]['inicio']   , $conclusao[0]['dia']);
 					}
+					
+					echo '<td>'.$total_h_t.'</td>';
+
+					if($total_h_t != '---' && (double)$this->kilometragem > 0) {
+						$kmh = number_format((double)$this->kilometragem / $total_h_t,2);
+					} else {
+						$kmh = '---';
+					}
+					echo '<td>'.$kmh.'</td>';
 
 					echo '</tr>';
 				}

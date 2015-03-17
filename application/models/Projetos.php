@@ -16,10 +16,28 @@ class Application_Model_Projetos extends Application_Model_Abstract {
     }
 
 
-    public function find($id){
-        return $this->_dbTable->find($id)->current()->toArray();
+    //Procura os projetos pelo nome do grupo
+    function findByGroup($groupId, array $params = null) {
+        $select =  $this->_dbTable
+                        ->select()
+                        ->setIntegrityCheck(false)
+                        ->from('projetos')
+                        ->where('projetos.id_grupo = ?', (int)$groupId);
+
+
+        $conditions = isset($params['conditions']) ? $params['conditions'] : null;
+        if (is_array($conditions)) {
+            foreach ($conditions as $key => $condition) {
+                $select->where($key, $condition);
+            }
+        }
+
+        return $select->query()->fetchAll();
     }
 
+    public function find($id) {
+        return $this->_dbTable->find($id)->current()->toArray();
+    }
 
     public function findEtapas($id){
         return $this->_dbTable
@@ -66,10 +84,13 @@ class Application_Model_Projetos extends Application_Model_Abstract {
         $select = $this->_dbTable
                         ->select()
                         ->setIntegrityCheck(false)
-                        ->from('projetos')
-                        ->join('clientes', 'clientes.id = projetos.id_cliente', array('nome' => 'projetos.nome', 'nome_cliente' => 'clientes.nome',
-                            'inicio' => 'projetos.inicio', 'fim' => 'projetos.fim'))
-                        ->order(array('projetos.nome'));
+                        ->from('projetos', array(
+                            'nome' => 'projetos.nome', 
+                            'inicio' => 'projetos.inicio', 
+                            'fim' => 'projetos.fim',
+                            'id' => 'projetos.id'
+                            ))
+                        ->order(array('projetos.id DESC'));
 
 
         if (!empty($str)) {
@@ -87,8 +108,8 @@ class Application_Model_Projetos extends Application_Model_Abstract {
 
         $paginator = Zend_Paginator::factory( $select );
         $paginator->setCurrentPageNumber($page);
-        $paginator->setItemCountPerPage($perPage);
-        
+        $paginator->setItemCountPerPage($perPage);  
+
         return $paginator;
     }
 

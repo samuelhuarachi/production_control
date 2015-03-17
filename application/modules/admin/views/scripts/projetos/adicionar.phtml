@@ -3,7 +3,9 @@
   <li><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>  Adicionar</li>
 </ol>
 
+<a href="<?php echo $this->baseUrl('admin/grupo/adicionar'); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
 
+<br>
 <style>
 	.frm1 {
 		width: 300px;
@@ -18,12 +20,19 @@
 </style>
 <br>
 
+<p>
+	Código: <?php echo $this->dataGrupo['codigo_projeto']; ?>
+	</p>
+	<p>
+	Cliente: <?php echo $this->dadoscliente['0']['nome']; ?>
+	
+</p>
+
 <div class="frm1">
 <?php 
-
 echo $this->frm;
-
- ?>	
+?>
+<br>
 
 </div>
 <script>
@@ -33,13 +42,11 @@ echo $this->frm;
 	    $( ".data_final" ).datepicker({ dateFormat: 'dd/mm/yy' });
 	    $( "#date_de" ).datepicker({ dateFormat: 'dd/mm/yy' });
 	    $( "#date_ate" ).datepicker({ dateFormat: 'dd/mm/yy' });
-
 	});
-
 </script>
 
 
-<style>
+<!-- <style>
 	.filtrosp {
 		margin-bottom: 10px;
 		float: right;
@@ -51,8 +58,8 @@ echo $this->frm;
 	.listaprojetos {
 		margin-bottom: 100px;
 	}
-</style>
-<div class="filtrosp">
+</style> -->
+<!-- <div class="filtrosp">
 	<form class="form-inline" method="post" action="<?php echo $this->baseUrl("admin/projetos/adicionar"); ?>">
 	  <div class="form-group">
 	  	<select class="form-control" name="empresas">
@@ -76,7 +83,7 @@ echo $this->frm;
 		<button type="submit" class="btn btn-default">Procurar</button>
 		
 	</form>
-</div>
+</div> -->
 
 <div class="listaprojetos">
 	<table class="table table-hover">
@@ -86,57 +93,56 @@ echo $this->frm;
 			<td><strong>Nome</strong></td>
 			<td><strong>Data Inicial</strong></td>
 			<td><strong>Data Final</strong></td>
-			<td><strong>Dias restantes</strong></td>
+			<td><strong>%</strong></td>
+			<td></td>
+			<td><strong>Horas</strong></td>
 		</tr>
 
 		<?php
 		 foreach ($this->registros as $projetos):
 		$mostrar_conteudo = 1;
 
-
 		if($this->filtroParam == "concluido"  &&  $this->projetos($projetos['id']) != 100)  {
 			$mostrar_conteudo = 0;
 		}
-
 
 		if($this->filtroParam == "andamento"  &&  $this->projetos($projetos['id']) == 100 ) {
 			$mostrar_conteudo = 0;
 		}
 
-
 		if($this->filtroParam == 'atrasado' &&  $this->projetos($projetos['id']) == 100){
 		 	$mostrar_conteudo = 0;
 		}
 
-
-
 		if($mostrar_conteudo == 1) {
 		?>
 			<tr>
-				<td><?php echo $projetos['codigo_projeto']; ?></td>
-				<td>  <a href="<?php echo $this->baseUrl("admin/projetos/etapas/id/" . $projetos['id']); ?>"> <?php echo '<strong>'.$projetos['nome_cliente'] . '</strong> - ' . $projetos['nome']; ?> </a></td>
+				<td><?php echo $this->dataGrupo['codigo_projeto']; ?></td>
+				<td> <a href="<?php echo $this->baseUrl("admin/projetos/etapas/id/" . $projetos['id'].'/idgrupo/'.$this->grupo_id); ?>"><?php echo $projetos['nome']; ?></a>  </td>
 				<td><?php echo date('d/m/Y',strtotime($projetos['inicio'])); ?></td>
 				<td><?php echo date('d/m/Y',strtotime($projetos['fim'])); ?></td>
 
-				
-				
-				<td><?php 
-					$data_atual =  strtotime(date("m/d/Y")); 
-					$data_projeto_entrega = strtotime(   $projetos['fim']   );
-
-					$data1 = new DateTime( date('Y/m/d',strtotime($projetos['fim'])) );
-			        $data2 = new DateTime(  date("Y/m/d")	 );
-			        $intervalo = $data1->diff( $data2 );
-			        echo $intervalo->d;
-			        if(  ($data_atual > $data_projeto_entrega) && ($this->projetos($projetos['id']) < 100)  ) {
-						echo ' <span class="label label-danger">Atrasado</span> ';
+				<td>
+					<?php $p =  $this->projetos($projetos['id']); ?>
+					<style>
+					.progress {
+						width: 200px;
 					}
+					</style>
+					<div class="progress">
+					  <div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $p; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $p; ?>%;">
+					    <?php echo $p; ?>% completo
+					  </div>
+					</div>
 
-				 ?></td>
+				 </td>
 				 <td>
-							 <a href="<?php echo $this->baseUrl("admin/projetos/deletarprojeto/id/" . $projetos['id']); ?>" onclick="return confirm('Você quer excluir esse projeto?')">
-			    <button class="btn btn-danger btn-xs">  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Excluir</button></a>
-					</td>
+					 <a href="<?php echo $this->baseUrl("admin/projetos/deletarprojeto/id/" . $projetos['id']  .'/idgrupo/'. $this->grupo_id ); ?>" onclick="return confirm('Você quer excluir esse projeto?')">
+	    <button class="btn btn-danger btn-xs">  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Excluir</button></a>
+				</td>
+				<td>
+					<?php echo $this->projetoshoras($projetos['id']) . 'h'; ?>
+				</td>
 			</tr>
 
 		<?php

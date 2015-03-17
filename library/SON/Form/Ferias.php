@@ -45,6 +45,7 @@ class SON_Form_Ferias extends Zend_Form {
 
         $observacoes = new Zend_Form_Element_Textarea('observacoes');
         $observacoes->setLabel('Observações: ')
+                    ->setAttrib('class', 'ckeditor')
                     ->setAttrib('title', 'Informe as observações');
         $observacoes->setOptions(array('cols' => '100', 'rows' => '4'));
         $observacoes->getDecorator('Label')->setOption('escape',false);

@@ -17,8 +17,8 @@ class User_ProjetosController extends SON_Controller_Action
 
     public function visualizarAction()
     {
-
     	$this->_dbProjetos = new Application_Model_Projetos();
+        $idgrupo = $this->_request->getParam('idgrupo', 0);
         $dataProjeto = $this->_dbProjetos->find($this->_request->getParam('id', 0));
         $etapas = $this->_dbProjetos->findEtapas($this->_request->getParam('id', 0));
         $minhasEtapas = $this->_dbProjetos->findEtapasFuncionario($this->_request->getParam('id', 0), $this->userId);
@@ -31,7 +31,7 @@ class User_ProjetosController extends SON_Controller_Action
         $this->view->projetoInfo = $dataProjeto;
         $this->view->porcentagem = $this->calculoPorcentagemConclusao($etapas);
         $this->view->minhasEtapas = $minhasEtapas;
-        
+        $this->view->idgrupo = $idgrupo;
     }
 
     public function calculoPorcentagemConclusao($etapas) {

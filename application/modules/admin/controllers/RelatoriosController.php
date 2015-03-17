@@ -19,7 +19,7 @@ class Admin_RelatoriosController extends SON_Controller_Action
         $this->_dbProjetos = new Application_Model_Projetos();
         $this->_modelEtapas = new Application_Model_Etapasprojeto();
         $this->_modelClientes = new Application_Model_Clientes();
-
+        $this->funcoes = new Funcoes_Geral();
 
 
     }
@@ -46,7 +46,15 @@ class Admin_RelatoriosController extends SON_Controller_Action
         $this->view->cliente = $cliente;
         $this->view->etapas = $etapas;
 
-
+        $this->view->funcoes = new Funcoes_Geral();
+        if($this->_request->isPost()) {
+            $data['id'] = (int)$idProjeto;
+            $data['observacoes'] = $_POST['observacoes'];
+            $this->_dbProjetos->save($data);
+            $this->_redirect('admin/relatorios/tgnpprojeto/id/'.$idProjeto);
+        }
+        
+        $this->funcoes->nome_mes($projeto['inicio']);
     }
 
 }

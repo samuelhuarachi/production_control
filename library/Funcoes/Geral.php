@@ -1,7 +1,36 @@
 <?php
 
 class Funcoes_Geral {
+	protected $date1;
 
+	function setDate1($date1) {
+		$this->date1 = $date1;
+	}
+
+	//Imprime " 10 de Março de 2015 "
+	function nome_mes($date1) {
+		$mons = array("Jan" => "Janeiro", "Feb" => "Fevereiro", "Mar" => "Março", "Apr" => "Abril", 
+			"May" => "Maio", "Jun" => "Junho", "Jul" => "Julho", "Aug" => "Agosto", "Sep" => "Setembro", 
+			"Oct" => "Outubro", "Nov" => "Novembro", "Dec" => "Dezembro");
+		
+		$mes = date('M',strtotime($date1));
+		echo date('d',strtotime($date1));
+		echo ' de ';
+		echo $mons[$mes];
+		echo ' de ';
+		echo date('Y',strtotime($date1));
+	}
+
+	//retorna o dia da semana. Segunda, terça, quarta, quinta ....
+	function dia_semana($data1){
+		// Array com os dias da semana
+		$diasemana = array("Domingo", "Segunda", 
+			"Terça", "Quarta", "Quinta", "Sexta", "Sábado");
+		$data = date('Y-m-d', strtotime($data1));
+
+		$diasemana_numero = date('w', strtotime($data));
+		return $diasemana[$diasemana_numero];
+	}
 
 	public function formata_data_para_padrao_mysql($value) {
 		$inicio = strtotime(  str_replace('/', '-', $value) );
@@ -19,7 +48,7 @@ class Funcoes_Geral {
 	}
 
 	public function hoje() {
-		return date("Y-m-d");
+		return date("Y-m-d h:i:s");
 	}
 
 	public function diff2($data_inicial, $data_final) {

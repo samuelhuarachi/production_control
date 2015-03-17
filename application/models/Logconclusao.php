@@ -22,6 +22,13 @@ class Application_Model_Logconclusao extends Application_Model_Abstract {
                         ->where('log_conclusao_etapas.id_etapa = ?', $id)->query()->fetchAll();
     }
 
+    public function save(array $data){
+        if(!isset($data['id']))
+            $this->_insert ($data);
+        else
+            $this->_update ($data);
+    }
+
 
 
 

@@ -16,14 +16,18 @@ class Admin_ProjetosController extends SON_Controller_Action
 
         $this->filtros = new Zend_Session_Namespace('filtros');
         $this->funcoes = new Funcoes_Geral();
+        $this->_modelGrupo = new Application_Model_Grupo();
     }
 
     public function editaretapaAction() {
         $id = $this->_request->getParam('id', 0);
+        $idGrupo = $this->_request->getParam('idgrupo', 0);
 
         //Adicionar estapas a um projeto pré existente
         $frm = new SON_Form_Addetapas();
+        $frm->removeElement('todos');
         $this->_modelEtapas = new Application_Model_Etapasprojeto();
+        $this->_modelProjeto = new Application_Model_Projetos();
         $funcoes = new Funcoes_Geral();
 
         $info = $this->_modelEtapas->find($id);
@@ -35,7 +39,6 @@ class Admin_ProjetosController extends SON_Controller_Action
 
         //Se $_POST
         if($this->_request->isPost()) {
-
             if($frm->isValid($this->_request->getPost())) {
                 $data = $frm->getValues();
                 $data['id'] = $id;
@@ -54,25 +57,43 @@ class Admin_ProjetosController extends SON_Controller_Action
 
                 $data['id_funcionarios'] = (int)$data['id_funcionarios'];
 
+                if(strtoupper($data['status']) == 'CONCLUIDO') {
+                    $modelConclusao = new Application_Model_Logconclusao();
+                    $findLog = $modelConclusao->find((int)$this->_request->getParam('idprojeto', 0));
+                    if(!$findLog) {
+                        $data2['id_etapa'] = (int)$data['id'];
+                        $data2['dia'] = $funcoes->formata_data_para_padrao_mysql($funcoes->hoje());
+                        $modelConclusao->save($data2);
+                    }
+                }
+
+                unset($data['todos']);
+
                 $this->_modelEtapas->save($data);
 
                 //Flash mensager avisando que o usuário foi cadastrado com sucesso
                 $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">A etapa '".$data['nome']."' foi atualizada no sistema</div>");
                 //Redireciona
-                $this->_redirect('/admin/projetos/etapas/id/' . $this->_request->getParam('idprojeto', 0));
+                $this->_redirect('/admin/projetos/etapas/id/' . $this->_request->getParam('idprojeto', 0) .'/idgrupo/' . $idGrupo );
             }
         }
 
         $frm->getElement('submit')->setLabel('Atualizar etapa');
         $this->view->frm = $frm;
         $this->view->idProjeto = $this->_request->getParam('idprojeto', 0);
-
+        $this->view->grupo_id = $this->_request->getParam('idgrupo', 0);
+        $this->view->dataProject = $this->_modelProjeto->find((int)$this->_request->getParam('idprojeto', 0));
     }
 
     public function adicionarAction() {
         
         $frm = new SON_Form_Projetos();
         $this->_dbProjetos = new Application_Model_Projetos();
+        $grupo_id = $this->_request->getParam('idgrupo', '0');
+        $this->filtros->grupo = $grupo_id;
+        $this->view->dataGrupo = $this->_modelGrupo->find($grupo_id);
+        $this->view->grupo_id = $grupo_id;
+        $this->view->dadoscliente = $this->_modelGrupo->findcliente($grupo_id);
 
         if($this->_request->isPost()) {
             if(!isset($_POST['pesquisa'])) {
@@ -85,13 +106,14 @@ class Admin_ProjetosController extends SON_Controller_Action
                     $fim = strtotime(  str_replace('/', '-',$data['fim']) );
                     $data['fim'] = date( 'Y-m-d H:i:s', $fim );
                     $data['lancar'] = 0;
+                    $data['id_grupo'] = (int)$grupo_id;
 
                     $this->_dbProjetos->save($data); //salva informações no banco de dados
 
                     //Flash mensager avisando que o usuário foi cadastrado com sucesso
                     $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">O projeto ".$data['nome']." foi inserido no sistema</div>");
                     //Redireciona
-                    $this->_redirect('/admin/projetos/adicionar');
+                    $this->_redirect('/admin/projetos/adicionar/idgrupo/'.$grupo_id);
 
                 }
             }
@@ -124,8 +146,6 @@ class Admin_ProjetosController extends SON_Controller_Action
 
         $frm->getElement('submit')->setLabel('Adicionar projeto');
         $this->view->frm = $frm;
-
-
 
     }
 
@@ -170,7 +190,7 @@ class Admin_ProjetosController extends SON_Controller_Action
         $this->view->filtroParam = $filtroParam;
 
         $filtroSQL = array();
-        $filtroSQL['lancar = ?'] = 0;
+        //$filtroSQL['lancar = ?'] = 0;
         $data_atual =  $this->funcoes->formata_data_para_padrao_mysql(date("d/m/Y")); 
         if($filtroParam == 'atrasado') {
             $filtroSQL['fim <= ?'] = $data_atual;
@@ -181,9 +201,11 @@ class Admin_ProjetosController extends SON_Controller_Action
         if($this->filtros->ate <> "") {
             $filtroSQL['inicio <= ?'] = $this->filtros->ate;
         }
-        if ($this->filtros->empresa <> 0) {
-            $filtroSQL['id_cliente = ?'] = $this->filtros->empresa;
-        }
+        // if ($this->filtros->empresa <> 0) {
+        //     $filtroSQL['id_cliente = ?'] = $this->filtros->empresa;
+        // }
+        $filtroSQL['id_grupo = ?'] = (int)$this->filtros->grupo;
+
 
         //Listar os projetos
         $registros = $this->_dbProjetos->search(array('page' => $this->_request->getParam('pagina', 1),
@@ -218,13 +240,13 @@ class Admin_ProjetosController extends SON_Controller_Action
                 throw new Exception('Data inválida');
             }
 
-            if($_POST['date_ate'] <> ""){
+            if($_POST['date_ate'] <> "") {
                 $filtros->ate =  $funcoes->formata_data_para_padrao_mysql( $_POST['date_ate']);
             } else {
                 throw new Exception('Data inválida');
             }
 
-            if($_POST['empresas'] <> "0"){
+            if($_POST['empresas'] <> "0") {
                 $filtros->empresa = (int)$_POST['empresas'];
             } else {
                 $filtros->empresa = 0;
@@ -276,31 +298,31 @@ class Admin_ProjetosController extends SON_Controller_Action
         
     }
 
-
-
-
     public function deletarprojetoAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
         $id = $this->_request->getParam('id', 0);
+        $idGrupo = $this->_request->getParam('idgrupo', 0);
         $this->_dbProjetos = new Application_Model_Projetos();
 
         $this->_dbProjetos->delete($id);
         //Flash mensager avisando que o usuário foi cadastrado com sucesso
         $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-danger\" role=\"alert\">O projeto ".$data['nome']." foi excluído</div>");
         //Redireciona
-        $this->_redirect('admin/projetos');
-
+        $this->_redirect('admin/projetos/adicionar/idgrupo/'.$idGrupo);
     }
 
     public function etapasAction() {
         $frm = new SON_Form_Projetos();
         $this->_dbProjetos = new Application_Model_Projetos();
+        $this->_dbGrupo = new Application_Model_Grupo();
         $dataProjeto = $this->_dbProjetos->find($this->_request->getParam('id', 0));
         $etapas = $this->_dbProjetos->findEtapas($this->_request->getParam('id', 0));
+        $idGrupo = $this->_request->getParam('idgrupo', 0);
+        $this->view->grupo_id = $idGrupo;
+        $this->view->clienteData = $this->_dbGrupo->findcliente($idGrupo);
         
-
         //Trata da atualização das infomrações do usuário
         if($this->_request->isPost()) {
             if($frm->isValid($this->_request->getPost())) {
@@ -315,17 +337,19 @@ class Admin_ProjetosController extends SON_Controller_Action
                 $this->_dbProjetos->save($data);
                 
                 //Flash mensager avisando que o usuário foi cadastrado com sucesso
-                $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">O projeto ".$data['nome']." foi atualizado com sucesso</div>");
+                $this->_helper->flashMessenger->addMessage(
+                    "<div class=\"alert alert-success\" role=\"alert\">O projeto ".
+                    $data['nome']." foi atualizado com sucesso</div>");
                 //Redireciona
-                $this->_redirect('admin/projetos/etapas/id/' . $data[id]);
-
+                $this->_redirect('admin/projetos/etapas/id/' . 
+                    $data[id].'/idgrupo/'.$this->_request->getParam('idgrupo', 0));
             }
         }
 
         $dataProjeto['inicio'] = date('d/m/Y',strtotime($dataProjeto['inicio']));
         $dataProjeto['fim'] = date('d/m/Y',strtotime($dataProjeto['fim']));
 
-
+        $this->view->kilometragem = $dataProjeto['km'];
         $frm->populate($dataProjeto);
         $frm->getElement('submit')->setLabel('Atualizar informações do projeto');
         $this->view->frm = $frm;
@@ -352,6 +376,8 @@ class Admin_ProjetosController extends SON_Controller_Action
         
         $idEtapa = $this->_request->getParam('id', 0);
         $idProjeto = $this->_request->getParam('idprojeto', 0);
+        $idgrupo = $this->_request->getParam('idgrupo', 0);
+
 
         $this->_modelEtapas = new Application_Model_Etapasprojeto();
         $this->_modelEtapas->delete($idEtapa);
@@ -365,11 +391,11 @@ class Admin_ProjetosController extends SON_Controller_Action
         $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-danger\" role=\"alert\">A etapa foi excluída do sistema</div>");
         
 
-        $this->_redirect('/admin/projetos/etapas/id/' . $idProjeto);
+        $this->_redirect('/admin/projetos/etapas/id/' . $idProjeto . '/idgrupo/'.$idgrupo);
     }
 
     public function addetapasAction() {
-        //Adicionar estapas a um projeto pré existente
+        //Adicionar etapas a um projeto pré existente
         $frm = new SON_Form_Addetapas();
 
 
@@ -395,19 +421,29 @@ class Admin_ProjetosController extends SON_Controller_Action
                 $data['id_funcionarios'] = (int)$data['id_funcionarios'];
                 $data['id_projetos'] = (int)$this->_request->getParam('id', 0);
 
-
-                $this->_modelEtapas->save($data);
+                if($data['todos'] == '1') {
+                    unset($data['todos']);
+                    // Aplica os dados da etapa a todos os projetos
+                    // que estão nesse grupo
+                    $this->_modelEtapas->savetodos($data, $this->_request->getParam('idgrupo', 0));
+                } else {
+                    unset($data['todos']);
+                    $this->_modelEtapas->save($data);
+                }
+                
 
                 //Flash mensager avisando que o usuário foi cadastrado com sucesso
                 $this->_helper->flashMessenger->addMessage("<div class=\"alert alert-success\" role=\"alert\">A etapa '".$data['nome']."' foi cadastrada no sistema</div>");
                 //Redireciona
-                $this->_redirect('/admin/projetos/etapas/id/' . $this->_request->getParam('id', 0));
+                $this->_redirect('/admin/projetos/etapas/id/'
+                 . $this->_request->getParam('id', 0).'/idgrupo/'.$this->_request->getParam('idgrupo', 0));
             }
         }
 
         $frm->getElement('submit')->setLabel('Adicionar nova etapa');
         $this->view->frm = $frm;
         $this->view->idProjeto = $this->_request->getParam('id', 0);
+        $this->view->grupo_id = $this->_request->getParam('idgrupo', 0);
     }
 
     

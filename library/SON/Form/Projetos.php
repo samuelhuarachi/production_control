@@ -13,37 +13,37 @@ class SON_Form_Projetos extends Zend_Form {
                              'FormElements',
                              'Form'));
 
-        $_modelClientes = new Application_Model_Clientes();
-        $cliente = new Zend_Form_Element_Select('id_cliente');
-        $cliente->setLabel('Clientes')
-                    ->setRequired(true)
-                    ->setAttrib('class', 'form-control')
-                    ->setDecorators(array(
-                        'ViewHelper',
-                        'Errors',
-                        'Description',
-                        'Label',
-                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
-                    ))
-                    ->setMultiOptions(array(null => '- selecione -') +  $_modelClientes->fetchPairs());
-        $this->addElement($cliente);
+        // $_modelClientes = new Application_Model_Clientes();
+        // $cliente = new Zend_Form_Element_Select('id_cliente');
+        // $cliente->setLabel('Clientes')
+        //             ->setRequired(true)
+        //             ->setAttrib('class', 'form-control')
+        //             ->setDecorators(array(
+        //                 'ViewHelper',
+        //                 'Errors',
+        //                 'Description',
+        //                 'Label',
+        //                 array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
+        //             ))
+        //             ->setMultiOptions(array(null => '- selecione -') +  $_modelClientes->fetchPairs());
+        // $this->addElement($cliente);
 
-        $projeto = new Zend_Form_Element_Text('codigo_projeto');
-        $projeto->setLabel('Código:')
-                ->setRequired(true)
-                ->addFilter('StripTags')
-                ->addFilter('StringTrim')
-                ->addValidator('NotEmpty')
-                ->setAttrib('class', 'form-control')
-                ->setDecorators(array(
-                        'ViewHelper',
-                        'Errors',
-                        'Description',
-                        'Label',
-                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
-                    ))
-                ->setAttrib('title', 'Informe o código do projeto');
-        $this->addElement($projeto);
+        // $projeto = new Zend_Form_Element_Text('codigo_projeto');
+        // $projeto->setLabel('Código:')
+        //         ->setRequired(true)
+        //         ->addFilter('StripTags')
+        //         ->addFilter('StringTrim')    
+        //         ->addValidator('NotEmpty')
+        //         ->setAttrib('class', 'form-control')
+        //         ->setDecorators(array(
+        //                 'ViewHelper',
+        //                 'Errors',
+        //                 'Description',
+        //                 'Label',
+        //                 array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
+        //             ))
+        //         ->setAttrib('title', 'Informe o código do projeto');
+        // $this->addElement($projeto);
 
 
         $nome = new Zend_Form_Element_Text('nome');
@@ -96,6 +96,23 @@ class SON_Form_Projetos extends Zend_Form {
                     ))
                 ->setAttrib('title', 'Informe a data final');
         $this->addElement($dataFinal);
+
+        $kilometragem = new Zend_Form_Element_Text('km');
+        $kilometragem->setLabel('kilometragem:')
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setDecorators(array(
+                        'ViewHelper',
+                        'Errors',
+                        'Description',
+                        'Label',
+                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
+                    ))
+                ->setAttrib('title', 'Informe a kilometragem');
+        $this->addElement($kilometragem);
+
 
         //Submit
         $submit = new Zend_Form_Element_Submit('submit');

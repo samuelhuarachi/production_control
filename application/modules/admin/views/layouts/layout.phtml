@@ -50,7 +50,7 @@
                   <?php if( $this->authStatus ): ?>
                   <ul class="nav navbar-nav">
                     <li <?php if($controllerValue == 'index') echo'class="active"';  ?> ><a href="<?php echo $this->baseUrl('/admin'); ?>">Inicial<span class="sr-only">(current)</span></a></li>
-                    <li <?php if($controllerValue == 'projetos') echo'class="active"';  ?>><a href="<?php echo $this->baseUrl('/admin/projetos'); ?>">Projetos</a></li>
+                    <!-- <li <?php if($controllerValue == 'projetos') echo'class="active"';  ?>><a href="<?php echo $this->baseUrl('/admin/projetos'); ?>">Projetos</a></li> -->
                     
                     <!-- Funcionários -->
                     <li  <?php if($controllerValue == 'funcionarios') {echo'class="dropdown active"';}else{echo'class="dropdown"'; }  ?>  >
@@ -69,7 +69,7 @@
                       <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo $this->baseUrl('/admin/clientes/cadastrar'); ?>">Cadastrar</a></li>
                         <li><a href="<?php echo $this->baseUrl('/admin/clientes/visualizar'); ?>">Visualizar</a></li>
-                        <li><a href="<?php echo $this->baseUrl('/admin/projetos/adicionar'); ?>">Projetos</a></li>
+                        <li><a href="<?php echo $this->baseUrl('/admin/grupo/adicionar'); ?>">Projetos</a></li>
                       </ul>
                     </li>
 

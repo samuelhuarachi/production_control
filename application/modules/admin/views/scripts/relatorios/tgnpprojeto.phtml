@@ -1,24 +1,113 @@
-<a href="#">Concluídos + Em Andamento</a> | <a href="#">Concluídos</a> | <a href="#">Em Andamento</a>
+<script src="<?php echo $this->baseUrl("ckeditor/ckeditor.js"); ?>"></script>
 
-<br>
-<br>
-<br>
 
-<p><strong>Cliente</strong>
+<strong>Cliente: </strong>
 <?php 
-echo $this->cliente['nome'];?></p>
-
-<p><strong>Nome do projeto</strong>
+echo $this->cliente['nome'];?>
+<br>
+<strong>Nome do projeto: </strong>
 <?php
 echo $this->projeto['nome'];
-?></p>
+?>
+<br><strong>Data inicial: </strong>
+<?php 
+echo $this->funcoes->nome_mes($this->projeto['inicio']);
+?>
+<br>
+<strong>Data final: </strong>
+<?php echo $this->funcoes->nome_mes($this->projeto['fim']); ?>
+
+<br><br>
+
+
+<style>
+	.etapas1 {
+		border: 1px dotted #333;
+		margin-bottom: 20px;
+		width: 411px;
+		padding: 20px;
+		
+	}
+	.contetatpas{
+		float: left;
+	}
+</style>
 
 <p><strong>Etapas</strong></p>
-<?php 
-foreach ($this->etapas as $key => $value) {
-	echo '<p>';
-	echo $value['nome'] . $value['inicio'] . $value['fim'] . $value['status'];
-	echo '</p>';
-}
+<div class="contetatpas">
+	<?php 
+		$total = 0;
+		foreach ($this->etapas as $key => $value) {
+		
+			echo '<div class="etapas1">';
+			echo '<strong>'.$value['nome'].'</strong>' . '<br > <strong>Início </strong>'.$this->funcoes->volta_data_ao_normal($value['inicio']) . '<br > <strong>Fim </strong>'.$this->funcoes->volta_data_ao_normal($value['fim']) .'<br ><strong>Status </strong>' .$value['status'];
+			if ($value['status'] == 'concluido' || $value['status']== 'em andamento') {
+				$usuario = $this->usuarioetapa((int)$value['id_funcionarios']);
+				echo '<br ><p><strong>Etapa realizada pelo(a) "' . $usuario['0']['nome'] . '"';
+				if ($value['status'] == 'concluido') {
+					$conclusao = $this->conclusaoetapa((int)$value['id']);
+				} else {
+					$conclusao = array();
+					$conclusao['0']['dia'] = date('Y-m-d h:i:s');
+				}
+				echo ', e foi concluída no dia ' . date("d/m/Y h:i:s",strtotime($conclusao['0']['dia'])) . "</strong>";
+
+				$data1 = new DateTime( date("Y-m-d h:i:s",strtotime($value['inicio']) ));
+				$data2 = new DateTime( date("Y-m-d h:i:s",strtotime($conclusao['0']['dia']) ) );
+				$intervalo = $data1->diff( $data2 );
+
+				echo "<p><strong>Tempo para realização da etapa:</strong> {$intervalo->y} ano(s), {$intervalo->m} mes(es) e {$intervalo->d} dia(s) </p>";
+				$total = $total +  $this->horastrabalhadas($value['inicio'],$conclusao['0']['dia']);
+				echo '. Tempo cronometrado do dia '.date("d/m/Y",strtotime($value['inicio']) ).' até o dia '.date("d/m/Y h:i:s",strtotime($conclusao['0']['dia']) );
+			}
+			
+
+			echo '</div>';
+		}
+
 
  ?>
+</div>
+
+<style>
+	.total {
+		border: 1px solid #FF4949;
+		position: absolute;
+		width: 155px;
+		text-align: center;	
+		margin-left: 258px;
+		margin-top: -2px;
+		background-color: red;
+		color: #fff;
+		float: left;
+		-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+
+
+
+	}
+	.observacoes2 {
+		float: left;
+		margin-left: 55px;
+		margin-top: -111px;
+		margin-bottom: 55px;
+		padding-left: 24px;
+	}
+	.observacoes2 form{
+		padding-left: -24px;
+
+	}
+</style>
+<div class="total">
+	<b>Total</b> <?php echo $total; ?>h
+</div>
+<div class="observacoes2">
+	<h3><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Observações</h3>
+	<form name="academia" action="" method="POST">
+		<textarea class="ckeditor" name="observacoes" id="observacoes" rows="20" cols="77" placeholder="Digite suas observaçoes aqui..."><?php echo $this->projeto['observacoes']; ?></textarea>
+		<br>
+		<input class="btn btn-success" type="submit" name="submit" id="submit" value="Salvar">
+	</form>
+</div>
+

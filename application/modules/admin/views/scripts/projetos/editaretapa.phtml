@@ -4,10 +4,30 @@
   <li class="active"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>  Atualizar</li>
 </ol>
 
-<a href="<?php echo $this->baseUrl('admin/projetos/etapas/id/' . $this->idProjeto ); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+<a href="<?php echo $this->baseUrl('admin/projetos/etapas/id/' . $this->idProjeto .'/idgrupo/'.$this->grupo_id); ?>"><button type="button" class="btn btn-success btn-xs"> <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span> Voltar</button></a>
+
+<center>
+	<h3>
+	<small>Projeto - 
+	Início</small>
+	<?php echo date('d/m/Y',strtotime($this->dataProject['inicio'])); ?>
+	 <small>até </small>
+	<?php echo date('d/m/Y',strtotime($this->dataProject['fim'])); ?>
+
+	<?php 
+	$data1 = new DateTime( date("Y-m-d h:i:s",strtotime($this->dataProject['inicio']) ));
+	$data2 = new DateTime( date("Y-m-d h:i:s",strtotime($this->dataProject['fim']) ) );
+	$intervalo = $data1->diff( $data2 );
+
+	echo "<p><small><i>Tempo para realização do projeto:</strong> {$intervalo->y} ano(s), {$intervalo->m} mes(es) e {$intervalo->d} dia(s) </i></small></p>";
+	 ?>
+
+	</h3>
+</center>
+
+
 
 <style>
-	
 	.frmaddetapas {
 		margin-left: 66px;
 		width: 301px;

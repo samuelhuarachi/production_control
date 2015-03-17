@@ -188,10 +188,12 @@ class Admin_FuncionariosController extends SON_Controller_Action
                 unset($dataUser['rg']);
                 unset($dataUser['data_nascimento']);
                 unset($dataUser['admissao']);
+                unset($dataUser['funcionarios']);
 
                 $this->_dbUser = new Application_Model_User();
                 $this->_dbUserDbtable = new Application_Model_DbTable_User();
                 $dataUser['tipo'] = '2'; //define o tipo do usário como 2 = funcionário
+                
                 $this->_dbUser->save($dataUser); //salva informações no banco de dados
 
                 $last_id = $this->_dbUserDbtable->getAdapter()->lastInsertId(); //Pega a id

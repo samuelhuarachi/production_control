@@ -24,6 +24,7 @@ library/ZendX
 library/Zend
 node_modules/
 controleApp/bootstrap
+controleApp/ckeditor
 
 
 # Compiled source #

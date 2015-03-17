@@ -9,6 +9,20 @@ class SON_Form_Addetapas extends Zend_Form {
         $this->setDecorators(array(
                              'FormElements',
                              'Form'));
+        
+        $todos = new Zend_Form_Element_Checkbox('todos');
+        $todos->setLabel('Aplicar em todos')
+                ->setAttrib('class', 'checkbox')
+                ->setDecorators(array(
+                        'ViewHelper',
+                        'Errors',
+                        'Description',
+                        'Label',
+                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
+                    ))
+                ->setName('todos');
+        $this->addElement($todos);
+
 
 
         $nome = new Zend_Form_Element_Text('nome');
