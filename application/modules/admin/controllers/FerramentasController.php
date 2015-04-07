@@ -2,7 +2,6 @@
 
 class Admin_FerramentasController extends SON_Controller_Action
 {
-
 	public function init()
     {
         parent::init();
@@ -24,71 +23,95 @@ class Admin_FerramentasController extends SON_Controller_Action
 
                 require_once dirname(__FILE__) . '/../../../../library/PHPExcel/Classes/PHPExcel.php';
 
+                /* Upload dos arquivos Tap, Dados, e Base  **/
                 $arquivo_name = $data['arquivo_save'].'.xls';
+
+                $inputFileType = 'CSV';
+				$objReader = PHPExcel_IOFactory::createReader($inputFileType);
+				$objReader->setDelimiter(";"); 
+				$objReader->setEnclosure('');
+				$objPHPCSV_TAPS = $objReader->load("uploads/" . $data['upload_tap']);
+
 
                 $objPHPExcel_VALORES = PHPExcel_IOFactory::load("uploads/" . $data['upload_xls']);
 
-				$objPHPExcel = PHPExcel_IOFactory::load("uploads/MODELO.xls");
+				$objPHPExcel = PHPExcel_IOFactory::load("uploads/" . $data['upload_base']);
 				
+				//Gera o array com as informaçoes dos taps
+				$array_taps = array();
+				$contador = 1;
+				while($contador < 100) {
+					$coluna = 'A'. $contador;
+					$coluna2 = 'B'. $contador;
+					$valor = trim($objPHPCSV_TAPS->getActiveSheet()->getCell($coluna)->getFormattedValue());
+
+					$valor2 = trim($objPHPCSV_TAPS->getActiveSheet()->getCell($coluna2)->getFormattedValue());
+					
+					$array_taps[$valor] = $valor2;
+					$contador += 1;
+				}
+				
+				//Gera o array com as informaçoes dos dados
+				$array_dados = array();
+				$contador = 1;
+				while($contador < 6000) {
+					$coluna = 'C'. $contador;
+					$coluna2 = 'D'. $contador;
+					$valor = trim($objPHPExcel_VALORES->getActiveSheet()->getCell($coluna)->getFormattedValue());
+
+					$valor2 = trim($objPHPExcel_VALORES->getActiveSheet()->getCell($coluna2)->getFormattedValue());
+					
+					$array_dados[$valor] = $valor2;
+					$contador += 1;
+				}
+
+
+				//Atualiza a base do xls, e gera o arquivo para download
+				$array_base = array();
 				$contador = 2;
 				while($contador < 300) {
 					$coluna = 'E'. $contador;
 					$valor = trim($objPHPExcel->getActiveSheet()->getCell($coluna)->getFormattedValue());
 					if($valor != '' && $valor != 'Part Number') {
-						$total = $this->procurar_total($valor, $objPHPExcel_VALORES);
-						$objPHPExcel->setActiveSheetIndex(0)
-				 			->setCellValue('F'.(string)$contador, $total);
+						if(  array_key_exists($valor , $array_dados) ) {
+							$objPHPExcel->setActiveSheetIndex(0)
+				  			->setCellValue('F'.(string)$contador, $array_dados[$valor]);
+						}
 					}
+
+					$coluna = 'A'. $contador;
+					$valor = trim(str_replace('-', '', $objPHPExcel->getActiveSheet()->getCell($coluna)->getFormattedValue()));
+					if($valor != '' && $valor != 'Part Number') {
+						if(  array_key_exists($valor , $array_taps) ) {
+							$objPHPExcel->setActiveSheetIndex(0)
+				  			->setCellValue('B'.(string)$contador, $array_taps[$valor]);
+						}
+					}
+
 					$contador += 1;
 				}
 
-
 				// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-				$objPHPExcel->setActiveSheetIndex(0);
 
 				// Redirect output to a client’s web browser (Excel5)
-				 header('Content-Type: application/vnd.ms-excel');
-				 header('Content-Disposition: attachment;filename="'.$arquivo_name.'"');
-				 header('Cache-Control: max-age=0');
+				header('Content-Type: application/vnd.ms-excel');
+				header('Content-Disposition: attachment;filename="'.$arquivo_name.'"');
+				header('Cache-Control: max-age=0');
 				// // If you're serving to IE 9, then the following may be needed
-				 header('Cache-Control: max-age=1');
+				header('Cache-Control: max-age=1');
 
 				// // If you're serving to IE over SSL, then the following may be needed
-				 header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-				 header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
-				 header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-				 header ('Pragma: public'); // HTTP/1.0
+				header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+				header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+				header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+				header ('Pragma: public'); // HTTP/1.0
 
-				 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 				$objWriter->save('php://output');
 				exit();
-
-
-                //$this->_redirect('admin/ferramentas/mesclar');
             }
         }
-
-
     	$this->view->frm = $frm;
     }
-
-    protected function procurar_total($label, $excel_valores) {
-    	$contador = 1;
-    	$total = '';
-    	$sair = 0;
-    	while($contador < 6001 && $sair == 0) {
-    		$coluna = 'C'. $contador;
-			$valor = trim($excel_valores->getActiveSheet()->getCell($coluna)->getFormattedValue());
-			if($valor == $label) {
-				$coluna2 = 'D'. $contador;
-				$total = trim($excel_valores->getActiveSheet()->getCell($coluna2)->getFormattedValue());
-				$sair = 1;
-			}
-    		$contador += 1;
-    	}
-
-    	return (string)$total;
-    }
-
 
 }

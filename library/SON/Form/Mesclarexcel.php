@@ -11,13 +11,32 @@ class SON_Form_Mesclarexcel extends Zend_Form {
                              'FormElements',
                              'Form'));
 
-        //var_dump(realpath('uploads'));
-        
+        $upload = new Zend_Form_Element_File('upload_tap');
+        $upload->setLabel('Carregar arquivo CSV - Tap')
+            ->addValidator('Extension', false, array('csv'))
+            ->addValidator('Size', false, 1000240000)
+            ->setRequired(true)
+            ->removeDecorator('htmlTag')
+            ->setAttrib('class', 'carr')
+            ->setDestination(realpath('uploads'));
+        $this->addElement($upload);
+
+        $upload = new Zend_Form_Element_File('upload_base');
+        $upload->setLabel('Carregar arquivo Excel - Base. Ex: PART_NUMBERS_BOM_LODE_FRANCA.xls')
+            ->addValidator('Extension', false, array('xls'))
+            ->addValidator('Size', false, 1000240000)
+            ->setRequired(true)
+            ->removeDecorator('htmlTag')
+            ->setAttrib('class', 'carr')
+            ->setDestination(realpath('uploads'));
+        $this->addElement($upload);
+
         $upload = new Zend_Form_Element_File('upload_xls');
-		$upload->setLabel('Carregar arquivo Excel')
+		$upload->setLabel('Carregar arquivo Excel - Dados. Ex: BOM_FAC37.xls')
 			->addValidator('Extension', false, array('xls'))
 			->addValidator('Size', false, 1000240000)
 			->setRequired(true)
+            ->removeDecorator('htmlTag')
 			->setDestination(realpath('uploads'));
 		$this->addElement($upload);
 
@@ -28,7 +47,7 @@ class SON_Form_Mesclarexcel extends Zend_Form {
                 ->addFilter('StringTrim')
                 ->addValidator('NotEmpty')
                 ->setAttrib('title', 'Informe o nome do arquivo')
-                ->setAttrib('placeholder', 'Nome do arquivo')
+                ->setAttrib('placeholder', 'Nome do arquivo - Salvar')
                 ->setDecorators(array(
                         'ViewHelper',
                         'Errors',
