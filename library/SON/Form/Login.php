@@ -54,7 +54,11 @@ class SON_Form_Login extends Zend_Form {
         $submit->setLabel('Entrar')
                 ->setAttrib('class', 'btn btn-large btn-primary')
                 ->setDecorators(array(
-                        'ViewHelper'))
+                        'ViewHelper',
+                        'Errors',
+                        'Description',
+                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group btnsub'))
+                    ))
                 ->setIgnore(true);
         
         $this->addElement($submit);

@@ -39,7 +39,7 @@ class Application_Model_Projetos extends Application_Model_Abstract {
         return $this->_dbTable->find($id)->current()->toArray();
     }
 
-    public function findEtapas($id){
+    public function findEtapas($id) {
         return $this->_dbTable
                         ->select()
                         ->setIntegrityCheck(false)
@@ -50,7 +50,7 @@ class Application_Model_Projetos extends Application_Model_Abstract {
                         ->where('projetos.id = ?', $id)->query()->fetchAll();
     }
 
-    public function findEtapasFuncionario($id, $id_funcionario, array $params = null){
+    public function findEtapasFuncionario($id, $id_funcionario, array $params = null) {
         $select =  $this->_dbTable
                         ->select()
                         ->setIntegrityCheck(false)
@@ -67,7 +67,6 @@ class Application_Model_Projetos extends Application_Model_Abstract {
                 $select->where($key, $condition);
             }
         }
-
         return $select->query()->fetchAll();
     }
 

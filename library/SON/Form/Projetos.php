@@ -1,12 +1,8 @@
 <?php 
 
-
-
 class SON_Form_Projetos extends Zend_Form {
 
-
-
-	public function init(){
+	public function init() {
 		ZendX_JQuery::enableForm($this);
 		$this->setName('user');
         $this->setDecorators(array(

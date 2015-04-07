@@ -17,7 +17,6 @@ class Application_Model_Etapasprojeto extends Application_Model_Abstract {
     }
 
     function savetodos( $data,  $id_grupo ) {
-
          $this->_mProjetos = new Application_Model_Projetos();
          $projetos = $this->_mProjetos->findByGroup($id_grupo);
          if($projetos) {
@@ -27,7 +26,18 @@ class Application_Model_Etapasprojeto extends Application_Model_Abstract {
                 $this->save($data);
             }
          }
+    }
 
+    public function findByUserid($idUser) {
+        return $this->_dbTable
+                        ->select()
+                        ->setIntegrityCheck(false)
+                        ->from('etapasprojeto')
+                        //->join('etapasprojeto','etapasprojeto.id_projetos=projetos.id', array('projetosID' => 'projetos.id', 'etapasID' => 'etapasprojeto.id' ,  'projetosNome' => 'projetos.nome', 'etapasprojetoNome' => 'etapasprojeto.nome'))
+
+                        //->joinLeft('etapasprojeto', 'etapasprojeto.id_projetos = projetos.id')
+                        ->where('etapasprojeto.id_funcionarios = ?', (int)$idUser)
+                        ->query()->fetchAll();
     }
 
 

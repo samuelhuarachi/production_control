@@ -57,14 +57,15 @@ class User_IndexController extends SON_Controller_Action
         $filtroSQL = array();
         $data_atual =  $funcoes->formata_data_para_padrao_mysql(date("d/m/Y")); 
         if($filtroParam == 'atrasado') {
-            $filtroSQL['fim <= ?'] = $data_atual;
+            //$filtroSQL['fim <= ?'] = $data_atual;
         }
         if($filtros->de <> "") {
-            $filtroSQL['inicio >= ?'] = $filtros->de;
+            //$filtroSQL['inicio >= ?'] = $filtros->de;
         }
         if($filtros->ate <> "") {
-            $filtroSQL['inicio <= ?'] = $filtros->ate;
+            //$filtroSQL['inicio <= ?'] = $filtros->ate;
         }
+
         //Gerencia os filtros da pesquisa - fim
         
         $filtroSQL['id_grupo = ?'] = (int)$idGrupo;

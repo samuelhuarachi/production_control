@@ -35,16 +35,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                   </button>
-                  <a class="navbar-brand" href="<?php echo $this->baseUrl('/user'); ?>">Meus projetos</a>
+                  <a class="navbar-brand" href="<?php echo $this->baseUrl('/user/grupos/visualizar'); ?>">Meus projetos</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   <?php if( $this->authStatus ): ?>
                   <ul class="nav navbar-nav">
-                    <li <?php if($controllerValue == 'index') echo'class="active"';  ?> ><a href="<?php echo $this->baseUrl('/user'); ?>">Home<span class="sr-only">(current)</span></a></li>
-                    
-                    
+                    <li <?php if($controllerValue == 'index') echo'class="active"';  ?> ><a href="<?php echo $this->baseUrl('/user/grupos/visualizar'); ?>">Home<span class="sr-only">(current)</span></a></li>
                   </ul>
                   
                   <ul class="nav navbar-nav navbar-right ">

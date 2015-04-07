@@ -39,7 +39,9 @@
 			<td><strong>Operação</strong></td>
 		</tr>
 		<?php 
+
 		foreach ($this->minhasEtapas as $key => $value) {
+
 			echo '<tr>';
 			
 			echo '<td>';
@@ -52,14 +54,22 @@
 			<a href="'.$this->baseUrl('user/etapas/mudarstatus/id/'.$value['id'].'/status/concluido/idgrupo/'.$this->idgrupo).'">Concluído</a>';
 
 
-			echo '</td>';
-			echo '<td>';
-			echo date('d/m/Y',strtotime($value['inicio']));
-			echo '</td>';
-			echo '<td>';
-			echo date('d/m/Y',strtotime($value['fim']));
+			$conclusao = $this->conclusaoetapa($value['id']);
 
 			echo '</td>';
+
+
+			if(isset($conclusao[0]['inicio'])){
+				echo '<td>'.date('d/m/Y H:i:s',strtotime($conclusao[0]['inicio'])).'</td>';
+			} else {
+				echo '<td>---</td>';
+			}
+			if(isset($conclusao[0]['dia'])){
+				echo '<td>'.date('d/m/Y H:i:s',strtotime($conclusao[0]['dia'])).'</td>';
+			} else {
+				echo '<td>---</td>';
+			}
+
 
 			echo '<td>';
 
@@ -85,8 +95,8 @@
 			<?php
 
 			echo '</tr>';
-		}
 
+		}
 
 		 ?>
 	</table>
@@ -107,10 +117,10 @@
 			<td><strong>Status</strong></td>
 			<td></td>
 		</tr>
-
-
-		<?php  
+		
+		<?php
 		foreach ($this->etapas as $key => $value) {
+			if ($value['id'] != NULL) {
 			?>
 				<tr>
 					<?php $nomeUsuario = $this->usuario($value['id_funcionarios']);
@@ -151,6 +161,7 @@
 
 				</tr>
 		<?php
+			}
 		}
 		?>
 		

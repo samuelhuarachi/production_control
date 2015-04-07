@@ -1,4 +1,4 @@
-<?php 
+ <?php 
 
 
 class Application_Model_Grupo extends Application_Model_Abstract {
@@ -65,7 +65,6 @@ class Application_Model_Grupo extends Application_Model_Abstract {
                 $select->where($key, $condition);
             }
         }
-
 
         if( !is_null($limit) || $limit != 0 )
             //$select->limit( $perPage, $limit );

@@ -25,7 +25,7 @@ class Application_Model_Clientes extends Application_Model_Abstract {
     public function fetchPairs($conditions = null) {
         $select = $this->_dbTable->select();
         $select->order('nome');
-        if(is_array($conditions)){
+        if(is_array($conditions)) {
             foreach ($conditions as $key=>$value)
                 $select->where($key, $value);
         }

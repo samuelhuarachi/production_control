@@ -127,7 +127,7 @@ $sedisponivel = $this->verificatarefasaberto($projetos['id']);
 			$data1 = new DateTime( date('Y/m/d',strtotime($projetos['fim'])) );
 	        $data2 = new DateTime(  date("Y/m/d")	 );
 	        $intervalo = $data1->diff( $data2 );
-	        echo $intervalo->d;
+	        echo $intervalo->y . ' ano(s) ' . $intervalo->m . ' mes(es) ' . $intervalo->d . ' dia(s)';
 	        if(  ($data_atual > $data_projeto_entrega) && ($this->projetos($projetos['id']) < 100)  ) {
 				echo ' <span class="label label-danger">Atrasado</span> ';
 			}

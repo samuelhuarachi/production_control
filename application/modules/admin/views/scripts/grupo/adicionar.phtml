@@ -18,7 +18,17 @@ echo $this->frm;
 
 <div class="filtrosp">
 	<form class="form-inline" method="post" action="<?php echo $this->baseUrl("admin/grupo/adicionar"); ?>">
-	
+		
+		<div class="form-group">
+		<select class="form-control" name="clientes" >
+		<option value="todos">Todos</option>
+		<?php 
+		foreach ($this->clientes as $key => $value) {
+			echo '<option value="'.$value['id'].'">'.$value['nome'].'</option>';
+		}
+		?>
+		</select>
+		</div>
 
 	  <div class="form-group">
 	    <input type="text" class="form-control" name="codigo" id="codigo" placeholder="Digite o código do projeto" value="<?php echo $this->codigo ?>">

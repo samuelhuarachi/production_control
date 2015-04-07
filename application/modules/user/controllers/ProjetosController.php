@@ -23,12 +23,12 @@ class User_ProjetosController extends SON_Controller_Action
         $etapas = $this->_dbProjetos->findEtapas($this->_request->getParam('id', 0));
         $minhasEtapas = $this->_dbProjetos->findEtapasFuncionario($this->_request->getParam('id', 0), $this->userId);
 
-        
         $dataProjeto['inicio'] = date('d/m/Y',strtotime($dataProjeto['inicio']));
         $dataProjeto['fim'] = date('d/m/Y',strtotime($dataProjeto['fim']));
         $this->view->idProjeto = $this->_request->getParam('id', 0); //pega a id do projeto
         $this->view->etapas = $etapas;
         $this->view->projetoInfo = $dataProjeto;
+
         $this->view->porcentagem = $this->calculoPorcentagemConclusao($etapas);
         $this->view->minhasEtapas = $minhasEtapas;
         $this->view->idgrupo = $idgrupo;

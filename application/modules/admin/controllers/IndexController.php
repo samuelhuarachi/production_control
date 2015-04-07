@@ -11,6 +11,63 @@ class Admin_IndexController extends SON_Controller_Action
 
     public function indexAction()
     {
+        $modelUser = new Application_Model_User();
+        $modelEtapasProjeto = new Application_Model_Etapasprojeto();
+        $modelLog = new Application_Model_Logconclusao();
+        
+        $arrayUser = $modelUser->fetchAll()->toArray();
+
+        if($this->_request->isPost()) {
+            var_dump($_POST);
+            var_dump(checkdate(2, 29, 2001));
+
+            if ($_POST['de'] != "" && $_POST['ate'] != "") {
+                $i1 = strtotime(str_replace('/', '-',$_POST['de']) .' 08:00:00');
+                $i2 = strtotime(str_replace('/', '-',$_POST['ate']) .' 20:00:00');
+
+            }
+            
+        }
+
+        $resultado = array();
+        foreach ($arrayUser as $key => $value) {
+            if($value['tipo'] == '2') {
+                $qtdAtividades = 0;
+                $mep = $modelEtapasProjeto->findByUserid($value['id']);
+                foreach ($mep as $key2 => $value2) {
+                   $fl = $modelLog->find($value2['id']);
+                   
+                   if($fl) {
+                    if(strlen($fl[0]['dia']) > 5 && strlen($fl[0]['inicio']) > 5 ){
+                        if(isset($i1) && isset($i2)) {
+                            $i3 = strtotime($fl[0]['inicio'] );
+                            if($i3 >= $i1 && $i3 <= $i2) {
+                                $qtdAtividades += 1;
+                            }
+
+                        } else {
+                            $qtdAtividades += 1;
+                        }
+                      }
+                   }
+                }
+                //var_dump($value['nome'] . ' --- ' . $qtdAtividades);
+                $resultado[] = array(
+                        'nome' => $value['nome'],
+                        'qtd' => $qtdAtividades
+                    );
+            }
+        }
+        $this->view->resultado = $resultado;
+
+        if(isset($i1) && isset($i2)) {
+            $this->view->i1 = $i1;
+            $this->view->i2 = $i2;
+        } else {
+            $this->view->i1 = $i1;
+            $this->view->i2 = $i2;
+        }
+
         /*
         $frontendOptions = array(
             'lifetime' => 200, 

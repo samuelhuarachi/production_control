@@ -6,13 +6,11 @@ class User_GruposController extends SON_Controller_Action
     {
         parent::init();
         /* Initialize action controller here */
-
         //This will catch any messege set in any action in this controller and send
         //it to the view on the next request.
         if ($this->_helper->FlashMessenger->hasMessages()) {
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
-
         $this->_modelGrupo = new Application_Model_Grupo();
         $this->funcoes = new Funcoes_Geral();
     }

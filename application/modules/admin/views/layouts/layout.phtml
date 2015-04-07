@@ -58,7 +58,6 @@
                       <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo $this->baseUrl('/admin/funcionarios/cadastrar'); ?>">Cadastrar</a></li>
                         <li><a href="<?php echo $this->baseUrl('/admin/funcionarios/visualizar'); ?>">Visualizar</a></li>
-                        
                       </ul>
                     </li>
                     
@@ -75,14 +74,23 @@
 
 
                     <li  <?php if($controllerValue == 'adminc') {echo'class="dropdown active"';}else{echo'class="dropdown"'; }  ?>  >
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin(s)<span class="caret"></span></a>
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Administradores<span class="caret"></span></a>
                       <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo $this->baseUrl('/admin/adminc/cadastrar'); ?>">Cadastrar</a></li>
                         <li><a href="<?php echo $this->baseUrl('/admin/adminc/visualizar'); ?>">Visualizar</a></li>
                       </ul>
                     </li>
 
-                    <li <?php if($controllerValue == 'relatorios') {echo'class="dropdown active"';} else { echo'class="dropdown"'; }   ?> >
+                    <li  <?php if($controllerValue == 'ferramentas') {echo'class="dropdown active"';}else{echo'class="dropdown"'; }  ?>  >
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Ferramentas<span class="caret"></span></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="<?php echo $this->baseUrl('/admin/ferramentas/mesclar'); ?>">Mesclar arquivos Excel</a></li>
+
+                      </ul>
+                    </li>
+
+
+                    <!-- <li <?php if($controllerValue == 'relatorios') {echo'class="dropdown active"';} else { echo'class="dropdown"'; }   ?> >
 
                       <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="<?php echo $this->baseUrl('/admin/relatorios'); ?>">Relatórios<span class="caret">
                           <span class="sr-only">(current)</span></a>
@@ -99,7 +107,7 @@
                         </li>
                         
                       </ul>
-                    </li>
+                    </li> -->
 
                   </ul>
                   

@@ -2,7 +2,6 @@
 
 class Admin_GrupoController extends SON_Controller_Action
 {
-
     public function init()
     {
         parent::init();
@@ -13,15 +12,15 @@ class Admin_GrupoController extends SON_Controller_Action
         if ($this->_helper->FlashMessenger->hasMessages()) {
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
+    }
 
+    function deleteAction() {
         $this->_dbProjetos = new Application_Model_Projetos();
         $this->_modelEtapas = new Application_Model_Etapasprojeto();
         $this->_modelClientes = new Application_Model_Clientes();
         $this->_modelGrupo = new Application_Model_Grupo();
         $this->funcoes = new Funcoes_Geral();
-    }
 
-    function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);
         $id = $this->_request->getParam('id', '0');
@@ -29,13 +28,54 @@ class Admin_GrupoController extends SON_Controller_Action
         $this->_redirect('admin/grupo/adicionar');
     }
 
+    function editarAction() {
+        $this->_dbProjetos = new Application_Model_Projetos();
+        $this->_modelEtapas = new Application_Model_Etapasprojeto();
+        $this->_modelClientes = new Application_Model_Clientes();
+        $this->_modelGrupo = new Application_Model_Grupo();
+        $this->funcoes = new Funcoes_Geral();
+
+
+        $id = $this->_request->getParam('id', '0');
+
+        $i = $this->_modelGrupo->findcliente($id);
+
+
+        $frm = new SON_Form_Grupo();
+
+        $data = array();
+        $data['id_cliente'] = $i[0]['id_cliente'];
+        $data['codigo_projeto'] = $i[0]['codigo_projeto'];
+
+        $frm->populate($data);
+
+        if($this->_request->isPost()) {
+            if($frm->isValid($this->_request->getPost())) {
+                $data = $frm->getValues();
+                $data['id'] = $id;
+
+                $this->_modelGrupo->save($data);
+                $this->_redirect('/admin/grupo/adicionar');
+            }
+        }
+        $this->view->frm = $frm;
+    }
+
     function adicionarAction() {
+        $this->_dbProjetos = new Application_Model_Projetos();
+        $this->_modelEtapas = new Application_Model_Etapasprojeto();
+        $this->_modelClientes = new Application_Model_Clientes();
+        $this->_modelGrupo = new Application_Model_Grupo();
+        $this->funcoes = new Funcoes_Geral();
+
         $frm = new SON_Form_Grupo();
         $filtros = new Zend_Session_Namespace('filtros');
         $conditions = array();
 
         if($this->_request->isPost()) {
 
+            //Senão existir poste[date_de], significa que estamos
+            //cadastrando um novo cliente no banco de dados
             if(!isset($_POST['date_de'])) {
                 if ($frm->isValid($this->_request->getPost())) {
                     $data = $frm->getValues();
@@ -47,16 +87,22 @@ class Admin_GrupoController extends SON_Controller_Action
                         $this->_modelGrupo->save($data);
                     }
                 }
+            //Senão, estaremos realizando uma pesquisa                
             } else {
                 if ( $_POST['date_de'] != "" &&  $_POST['date_ate'] != "" && $_POST['codigo'] == "" ) {
 
                     $filtros->de = $this->funcoes->formata_data_para_padrao_mysql($_POST['date_de']);
                     $filtros->ate = $this->funcoes->formata_data_para_padrao_mysql($_POST['date_ate']);
                 }
-                if($_POST['codigo'] != "") {
+                // if($_POST['codigo'] != "") {
                     $conditions['grupo.codigo_projeto LIKE ?'] = '%'.$_POST['codigo'].'%';
                     $filtros->codigo = $_POST['codigo'];
+                // }
+
+                if( $_POST['clientes'] != ""  ) {
+                    $filtros->clientes = $_POST['clientes'];
                 }
+
             }
         }
 
@@ -80,19 +126,24 @@ class Admin_GrupoController extends SON_Controller_Action
         $conditions['grupo.cadastro >= ?'] = $filtros->de;
         $conditions['grupo.cadastro <= ?'] = $filtros->ate;
 
+        if(isset($filtros->clientes)) {
+            if($filtros->clientes != "todos") 
+            {
+                $conditions['grupo.id_cliente = ?'] = $filtros->clientes;
+            }
+        }
 
         $registros = $this->_modelGrupo->search(
-            array('page' => $this->_request->getParam('pagina', 1),
+            array(  'page' => $this->_request->getParam('pagina', 1),
                     'conditions' => $conditions,
-                )
-            
+                 )
             ); 
         $this->view->registros = $registros;
 
 
         $frm->getElement('submit')->setLabel('Adicionar');
         $this->view->frm = $frm;
-
+        $this->view->clientes = $this->_modelClientes->fetchAll()->toArray();
 
     }
 

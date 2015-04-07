@@ -9,7 +9,7 @@
 </style>
 
 
-<div class="panel panel-success">
+<!-- <div class="panel panel-success">
   <div class="panel-heading">Gráfico dos projetos</div>
   <div class="panel-body">
     <form class="form-inline" action="#">
@@ -26,21 +26,21 @@
 </div>
 
 <div id="chartContainer" style="height: 300px; width: 833px; margin-bottom:35px;">
-</div>
+</div> -->
 
 
 <div class="panel panel-success">
   <div class="panel-heading">Gráfico dos funcionários</div>
   <div class="panel-body">
-    <form class="form-inline" action="#">
+    <form class="form-inline" action="<?php echo $this->baseUrl("admin"); ?>" method="POST">
 	  <div class="form-group">
-	    <input type="text" class="form-control" id="date_de2" placeholder="de">
+	    <input type="text" class="form-control" id="date_de2" name="de"  placeholder="<?php if(isset($this->i1)) {echo date('d/m/Y', $this->i1);}else {echo 'de';} ?>">
 	  </div>
 	  <div class="form-group">
-	    <input type="email" class="form-control" id="date_ate2" placeholder="até">
+	    <input type="text" class="form-control" id="date_ate2" name="ate" placeholder="<?php if(isset($this->i2)) {echo date('d/m/Y', $this->i2);}else{echo 'até';}   ?>">
 	  </div>
 		<button type="submit" class="btn btn-default">Procurar</button>
-		<button type="submit" class="btn btn-default">Limpar filtros</button>
+		<button type="submit" class="btn btn-default" name="limpar">Limpar filtros</button>
 	</form>
   </div>
 </div>
@@ -68,27 +68,25 @@ $(document).ready(function () {
     $( "#date_ate" ).datepicker({ dateFormat: 'dd/mm/yy' });
     $( "#date_de2" ).datepicker({ dateFormat: 'dd/mm/yy' });
     $( "#date_ate2" ).datepicker({ dateFormat: 'dd/mm/yy' });
-
 });
 window.onload = function () {
 		var chart = new CanvasJS.Chart("chartContainer2", {
 			title:{
-				text:"Etapas relizadas em Fev/2015"				
-
+				text:"Etapas relizadas"
 			},
                         animationEnabled: true,
 			axisX:{
 				interval: 1,
 				gridThickness: 0,
-				labelFontSize: 10,
+				labelFontSize: 11,
 				labelFontStyle: "normal",
 				labelFontWeight: "normal",
 				labelFontFamily: "Lucida Sans Unicode"
 
 			},
 			axisY2:{
-				interlacedColor: "rgba(1,77,101,.2)",
-				gridColor: "rgba(1,77,101,.1)"
+				interlacedColor: "rgba(1,71,101,.2)",
+				gridColor: "rgba(1,71,101,.1)"
 
 			},
 
@@ -100,24 +98,13 @@ window.onload = function () {
 				color: "#014D65",				
 				dataPoints: [
 				
-				{y: 5, label: "Tiago"  },
-				{y: 6, label: "Mateus"  },
-				{y: 7, label: "Luiza"  },
-				{y: 8, label: "Jéssica"  },
-				{y: 8, label: "Carol"  },
-				{y: 8, label: "Renata"  },
-				{y: 9, label: "Mário"  },
-				{y: 9, label: "Denis"  },
-				{y: 12, label: "Luzia"  },
-				{y: 13, label: "Bruna"  },
-				{y: 13, label: "Bruno"  },
-				{y: 15, label: "Tiago"  },
-				{y: 28, label: "Raphael" },
-				{y: 32, label: "Moisés"   },
-				{y: 32, label: "Renata"  },
-				{y: 68, label: "Samuel"   },
-				{y: 73, label: "Eduardo"},
-				{y: 132, label: "Pedro" }
+				<?php 
+
+				foreach ($this->resultado as $key => $value) {
+					echo '{y: '.$value['qtd'].', label: "'.$value['nome'].'"  },';
+				}
+
+				 ?>
 				]
 			}
 			
@@ -164,7 +151,7 @@ var chart = new CanvasJS.Chart("chartContainer",
       ]
     });
 
-    chart.render();
+   // chart.render();
 
 }
 

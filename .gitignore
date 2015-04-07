@@ -22,6 +22,7 @@ extras/documentation
 application/configs/
 library/ZendX
 library/Zend
+library/PHPExcel
 node_modules/
 controleApp/bootstrap
 controleApp/ckeditor
