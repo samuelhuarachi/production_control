@@ -4,10 +4,10 @@ Arcitech development
 see working
 
 Admin area
-http://vectoriza.com.br/p2/controleApp
+http://vectoriza.com.br/p3/controleApp
 
 User area
-http://vectoriza.com.br/p2/controleApp/user
+http://vectoriza.com.br/p3/controleApp/user
 
 
 admin@gmail.com pw:123
