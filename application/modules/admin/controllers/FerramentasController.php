@@ -47,21 +47,38 @@ class Admin_FerramentasController extends SON_Controller_Action
 
 					$valor2 = trim($objPHPCSV_TAPS->getActiveSheet()->getCell($coluna2)->getFormattedValue());
 					
-					$array_taps[$valor] = $valor2;
+					$array_taps[trim(str_replace(' ', '',str_replace('-', '',$valor)))] = $valor2;
 					$contador += 1;
 				}
 				
 				//Gera o array com as informaçoes dos dados
 				$array_dados = array();
 				$contador = 1;
+				$gravar = 1;
 				while($contador < 6000) {
+					$colunaA = 'A'. $contador;
 					$coluna = 'C'. $contador;
 					$coluna2 = 'D'. $contador;
-					$valor = trim($objPHPExcel_VALORES->getActiveSheet()->getCell($coluna)->getFormattedValue());
 
-					$valor2 = trim($objPHPExcel_VALORES->getActiveSheet()->getCell($coluna2)->getFormattedValue());
+					$valorA = trim(str_replace(' ', '',str_replace('-', '',$objPHPExcel_VALORES->getActiveSheet()->getCell($colunaA)->getFormattedValue())));
 					
-					$array_dados[$valor] = $valor2;
+					if($valorA != '') {
+						if (strpos($valorA,'Bank') !== false) {
+							if (strpos($valorA,'Bank2') !== false) {
+								$gravar = 1;
+							}else {
+								$gravar = 0;
+							}
+						}else {
+							$gravar = 1;
+						}
+					}
+					
+					if ($gravar == 1) {
+						$valor = trim($objPHPExcel_VALORES->getActiveSheet()->getCell($coluna)->getFormattedValue());
+						$valor2 = trim($objPHPExcel_VALORES->getActiveSheet()->getCell($coluna2)->getFormattedValue());
+						$array_dados[trim(str_replace(' ', '',str_replace('-', '',$valor)))] = $valor2;
+					}
 					$contador += 1;
 				}
 
@@ -71,17 +88,32 @@ class Admin_FerramentasController extends SON_Controller_Action
 				$contador = 2;
 				while($contador < 300) {
 					$coluna = 'E'. $contador;
-					$valor = trim($objPHPExcel->getActiveSheet()->getCell($coluna)->getFormattedValue());
-					if($valor != '' && $valor != 'Part Number') {
+					$valor = trim(str_replace(' ', '',str_replace('-', '',$objPHPExcel->getActiveSheet()->getCell($coluna)->getFormattedValue())));
+					
+					if($valor != '' && $valor != 'PartNumber') {
 						if(  array_key_exists($valor , $array_dados) ) {
 							$objPHPExcel->setActiveSheetIndex(0)
 				  			->setCellValue('F'.(string)$contador, $array_dados[$valor]);
 						}
 					}
+					if($valor == trim(str_replace(' ', '',str_replace('-', '',$data['tipocabo0'])))) {
+						$objPHPExcel->setActiveSheetIndex(0)
+				  			->setCellValue('F'.(string)$contador, $data['cabo0_qtd']);
+					}elseif ($valor == trim(str_replace(' ', '',str_replace('-', '',$data['tipocabo2'])))) {
+						$objPHPExcel->setActiveSheetIndex(0)
+				  			->setCellValue('F'.(string)$contador, $data['cabo2_qtd']);
+					}elseif ($valor == trim(str_replace(' ', '',str_replace('-', '',$data['fonte'])))) {
+						$objPHPExcel->setActiveSheetIndex(0)
+				  			->setCellValue('F'.(string)$contador, $data['fonte_qtd']);
+					}elseif ($valor == trim(str_replace(' ', '',str_replace('-', '',$data['lpi'])))) {
+						$objPHPExcel->setActiveSheetIndex(0)
+				  			->setCellValue('F'.(string)$contador, $data['lpi_qtd']);
+					}
+
 
 					$coluna = 'A'. $contador;
-					$valor = trim(str_replace('-', '', $objPHPExcel->getActiveSheet()->getCell($coluna)->getFormattedValue()));
-					if($valor != '' && $valor != 'Part Number') {
+					$valor = trim(str_replace(' ', '',str_replace('-', '', $objPHPExcel->getActiveSheet()->getCell($coluna)->getFormattedValue())));
+					if($valor != '' && $valor != 'PartNumber') {
 						if(  array_key_exists($valor , $array_taps) ) {
 							$objPHPExcel->setActiveSheetIndex(0)
 				  			->setCellValue('B'.(string)$contador, $array_taps[$valor]);
@@ -90,6 +122,10 @@ class Admin_FerramentasController extends SON_Controller_Action
 
 					$contador += 1;
 				}
+
+
+
+
 
 				// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 

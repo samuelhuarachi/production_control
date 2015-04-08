@@ -40,25 +40,129 @@ class SON_Form_Mesclarexcel extends Zend_Form {
 			->setDestination(realpath('uploads'));
 		$this->addElement($upload);
 
+
+        $cabo0 = new Zend_Form_Element_Text('tipocabo0');
+        $cabo0->setLabel('Tipo de cabo 0: ')
+                //->setRequired(true)
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setAttrib('placeholder', 'Ex: P3-500JCA AER')
+                ->setAttrib('title', 'Tipo de cabo 0');
+        $this->addElement($cabo0);
+
+        $cabo0_qtd = new Zend_Form_Element_Text('cabo0_qtd');
+        $cabo0_qtd//->setRequired(true)
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setDecorators(array(
+                        'ViewHelper',   
+                        'Errors',
+                        'Description',
+                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
+                    ))
+                ->setAttrib('placeholder', 'Quantidade')
+                ->setAttrib('title', 'Quantidade');
+        $this->addElement($cabo0_qtd);
+
+        $cabo2 = new Zend_Form_Element_Text('tipocabo2');
+        $cabo2->setLabel('Tipo de cabo 2: ')
+                //->setRequired(true)
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setAttrib('placeholder', 'Ex: P3-750JCA AER')
+                ->setAttrib('title', 'Tipo de cabo 2');
+        $this->addElement($cabo2);
+
+        $cabo2_qtd = new Zend_Form_Element_Text('cabo2_qtd');
+        $cabo2_qtd//->setRequired(true)
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setDecorators(array(
+                        'ViewHelper',   
+                        'Errors',
+                        'Description',
+                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
+                    ))
+                ->setAttrib('placeholder', 'Quantidade')
+                ->setAttrib('title', 'Quantidade');
+        $this->addElement($cabo2_qtd);
+
+
+        $fonte = new Zend_Form_Element_Text('fonte');
+        $fonte->setLabel('Tipo de fonte: ')
+                //->setRequired(true)
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setAttrib('placeholder', 'Ex: Alpha')
+                ->setAttrib('title', 'Tipo de fonte');
+        $this->addElement($fonte);
+
+        $fonte_qtd = new Zend_Form_Element_Text('fonte_qtd');
+        $fonte_qtd//->setRequired(true)
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setDecorators(array(
+                        'ViewHelper',   
+                        'Errors',
+                        'Description',
+                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
+                    ))
+                ->setAttrib('placeholder', 'Quantidade')
+                ->setAttrib('title', 'Quantidade');
+        $this->addElement($fonte_qtd);
+
+        $lpi = new Zend_Form_Element_Text('lpi');
+        $lpi->setLabel('LPI: ')
+                //->setRequired(true)
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setAttrib('placeholder', 'Ex: 9-LPI\22A')
+                ->setAttrib('title', 'LPI');
+        $this->addElement($lpi);
+
+        $lpi_qtd = new Zend_Form_Element_Text('lpi_qtd');
+        $lpi_qtd//->setRequired(true)
+                ->addFilter('StripTags')
+                ->addFilter('StringTrim')
+                ->addValidator('NotEmpty')
+                ->setAttrib('class', 'form-control')
+                ->setDecorators(array(
+                        'ViewHelper',   
+                        'Errors',
+                        'Description',
+                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
+                    ))
+                ->setAttrib('placeholder', 'Quantidade')
+                ->setAttrib('title', 'Quantidade');
+        $this->addElement($lpi_qtd);
+
+
 		$resultado = new Zend_Form_Element_Text('arquivo_save');
-        $resultado
-                ->setRequired(true)
+        $resultado->setLabel('Arquivo Download  : ')
+                //->setRequired(true)
                 ->addFilter('StripTags')
                 ->addFilter('StringTrim')
                 ->addValidator('NotEmpty')
                 ->setAttrib('title', 'Informe o nome do arquivo')
                 ->setAttrib('placeholder', 'Nome do arquivo - Salvar')
-                ->setDecorators(array(
-                        'ViewHelper',
-                        'Errors',
-                        'Description',
-                        array(array('out' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-group'))
-                    ))
                 ->setAttrib('class', 'form-control');
                 
         
         $this->addElement($resultado);
-
 
 		$submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Gerar Excel')
@@ -72,8 +176,6 @@ class SON_Form_Mesclarexcel extends Zend_Form {
                 ->setIgnore(true);
 
 
-        
-        
         $this->addElement($submit);
 
     }
