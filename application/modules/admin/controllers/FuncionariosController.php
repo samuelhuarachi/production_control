@@ -48,8 +48,11 @@ class Admin_FuncionariosController extends SON_Controller_Action
         $this->_helper->viewRenderer->setNoRender(TRUE);
 
         $this->_dbUser = new Application_Model_User();
-        //$this->_dbUser->delete($_POST['id']);
-        echo 'Usuário ' . $_POST['id'] . ' foi excluído <img src="/images/trash-icon.png" />. ';
+        $this->_dbUser->delete($_POST['id']);
+
+        $baseUrl =  Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
+
+        echo 'Usuário ' . $_POST['id'] . ' foi excluído <img src="'.$baseUrl.'images/trash-icon.png" />. ';
     }
 
     public function editarferiasAction() {
@@ -60,7 +63,7 @@ class Admin_FuncionariosController extends SON_Controller_Action
         $feriasDados = $this->_dbFerias->find($feriasID);
 
         $this->view->dias =  $funcoes->diff2(date('d/m/Y',strtotime($feriasDados['inicio'])) , date('d/m/Y',strtotime($feriasDados['fim']))  );
-        
+
         $feriasDados['inicio'] = $funcoes->volta_data_ao_normal($feriasDados['inicio']);
         $feriasDados['fim'] = $funcoes->volta_data_ao_normal($feriasDados['fim']);
 
@@ -87,7 +90,7 @@ class Admin_FuncionariosController extends SON_Controller_Action
 
     }
 
-    public function editarAction() 
+    public function editarAction()
     {
         $funcoes = new Funcoes_Geral();
         $this->_dbUser = new Application_Model_User();
@@ -103,7 +106,7 @@ class Admin_FuncionariosController extends SON_Controller_Action
             $funcionario['0']['admissao'] = $funcoes->volta_data_ao_normal($funcionario['0']['admissao']);
             $formularioFuncionarios->populate($funcionario['0']);
         }
-        
+
         //Trata da atualização das informações do funcionário
         if($this->_request->isPost() && isset($_POST['funcionarios'])) {
             if($formularioFuncionarios->isValid($this->_request->getPost())){
@@ -150,8 +153,6 @@ class Admin_FuncionariosController extends SON_Controller_Action
             }
         }
 
-
-
         $formularioFuncionarios->getElement('submit')->setLabel('Atualizar as informações do funcionário');
         $formFerias->getElement('submit')->setLabel('Adicionar férias');
         $formFerias->getElement('observacoes')->setOptions(array('cols' => '30', 'rows' => '4'));
@@ -160,16 +161,15 @@ class Admin_FuncionariosController extends SON_Controller_Action
         $this->view->userFerias =  $this->_dbFerias->getFerias($this->_request->getParam('id', 0));
         $this->view->funcoes = $funcoes;
         $this->view->userID = $this->_request->getParam('id', 0);
-
-
     }
 
     public function visualizarAction()
     {
         $this->view->funcoes = new Funcoes_Geral();
         $this->_dbUser = new Application_Model_User();
-        $this->view->registros = $this->_dbUser->search(array('page' => $this->_request->getParam('pagina', 1))); 
-    
+        $this->view->registros = $this->_dbUser->search(array('page' => $this->_request->getParam('pagina', 1)));
+
+
     }
     public function cadastrarAction()
     {
@@ -179,7 +179,7 @@ class Admin_FuncionariosController extends SON_Controller_Action
 
         //Se $_POST
     	if($this->_request->isPost()) {
-            
+
             //Se formulário é válido
             if($formularioCadastro->isValid($this->_request->getPost())){
                 $dataUser = $formularioCadastro->getValues(); // Informações que serão inseridas na tabela dos usuários
@@ -202,7 +202,7 @@ class Admin_FuncionariosController extends SON_Controller_Action
                 $this->_dbUser = new Application_Model_User();
                 $this->_dbUserDbtable = new Application_Model_DbTable_User();
                 $dataUser['tipo'] = '2'; //define o tipo do usário como 2 = funcionário
-                
+
                 $this->_dbUser->save($dataUser); //salva informações no banco de dados
 
                 $last_id = $this->_dbUserDbtable->getAdapter()->lastInsertId(); //Pega a id
@@ -216,7 +216,7 @@ class Admin_FuncionariosController extends SON_Controller_Action
 
                 $this->_dbFuncionarios = new Application_Model_Funcionarios();
                 $this->_dbFuncionarios->save($dataFuncionarios); //salva informações no banco de dados
-                
+
                 //Flash mensager avisando que o usuário foi cadastrado com sucesso
                 $this->_helper->flashMessenger->addMessage("O funcionário(a) ".$dataUser['nome']." foi cadastrado no sistema");
                 //Redireciona

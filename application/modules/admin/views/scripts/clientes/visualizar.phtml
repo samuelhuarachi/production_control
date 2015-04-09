@@ -135,7 +135,7 @@
           idCliente = items[j].value; // return string
           $.ajax({
             type: 'POST',
-            url: '/admin/clientes/ajaxexcluir', //Adaptação1 <= Especificar a url
+            url: BASEURL + 'admin/clientes/ajaxexcluir', //Adaptação1 <= Especificar a url
             data: { id : idCliente },
             async: false,
             success: function(response) {

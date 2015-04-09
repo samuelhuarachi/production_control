@@ -14,9 +14,9 @@
 <div class="row">
   <div class="col-lg-6">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Procurar funcionários...">
+      <input type="text" class="form-control find_user" placeholder="Procurar funcionários...">
       <span class="input-group-btn">
-        <button class="btn btn-success" type="button">Buscar</button>
+        <button class="btn btn-success" type="button" onclick="buscar_usuarios()" >Buscar</button>
       </span>
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
@@ -95,6 +95,18 @@
 
 
 <script type="text/javascript">
+  function buscar_usuarios() {
+    var user_input;
+    user_input = document.getElementsByClassName("find_user")[0].value.trim();
+    if(user_input.length != 0) {
+      window.location.replace("/admin/funcionarios/visualizar");
+
+    }
+    
+
+  }
+
+
   var tabelaUser = "tabela_usuarios";
 
   //marca todos os checkbox dos usuários
@@ -107,7 +119,7 @@
     if (label == "Todos") {
       obj.innerHTML = "Nenhum";
       valor = true;
-    }else {
+    } else {
       obj.innerHTML = "Todos";
       valor = false;
     }
@@ -118,9 +130,7 @@
         {  
              items[j].checked = valor;
         }
-
     }
-
   }
 
   //Procura usuários que estão selecionados, para cumprir com
@@ -144,7 +154,7 @@
           idCliente = items[j].value; // return string
           $.ajax({
             type: 'POST',
-            url: '/admin/funcionarios/ajaxexcluir', //Adaptação1 <= Especificar a url
+            url: BASEURL + 'admin/funcionarios/ajaxexcluir', //Adaptação1 <= Especificar a url
             data: { id : idCliente },
             async: false,
             success: function(response) {
@@ -166,24 +176,6 @@
     return false
   };
 
-  function Redirect (url) {
-      var ua        = navigator.userAgent.toLowerCase(),
-        isIE      = ua.indexOf('msie') !== -1,
-        version   = parseInt(ua.substr(4, 2), 10);
-
-      // Internet Explorer 8 and lower
-      if (isIE && version < 9) {
-          var link = document.createElement('a');
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-      }
-
-      // All other browsers
-      else { window.location.href = url; }
-  }
-
-  //procura_usuarios();
 </script>
 
 <?php

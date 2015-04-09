@@ -54,7 +54,9 @@ class Admin_ClientesController extends SON_Controller_Action
 
         $this->_dbClientes = new Application_Model_Clientes();
         $this->_dbClientes->delete($_POST['id']);
-        echo 'O cliente ' . $_POST['id'] . ' foi excluído <img src="/images/trash-icon.png" />. ';
+
+        $baseUrl =  Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
+        echo 'O cliente ' . $_POST['id'] . ' foi excluído <img src="'.$baseUrl.'images/trash-icon.png" />. ';
     }
 
     public function deleteAction() {

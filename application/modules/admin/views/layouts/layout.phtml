@@ -29,6 +29,9 @@
 
     </head>
     <body>
+      <script type="text/javascript">
+            var BASEURL = "<?php echo $this->baseUrl("/"); ?>";
+        </script>
         <?php $controllerValue =  Zend_Controller_Front::getInstance()->getRequest()->getControllerName(); ?>
         <section class="container">
 
@@ -137,9 +140,7 @@
 
         </section>
 
-        <script type="text/javascript">
-            var BASEURL = "<?php echo $this->baseUrl("/"); ?>";
-        </script>
+        
 		<script type="text/javascript">
 			//bkLib.onDomLoaded(function() { new nicEditor({fullPanel : true}).panelInstance('conteudo'); });
 
