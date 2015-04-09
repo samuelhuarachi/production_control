@@ -58,6 +58,8 @@ controleApp/ckeditor
  
 # OS generated files #
 ######################
+*.xls
+*.csv
 .DS_Store
 .DS_Store?
 ._*
