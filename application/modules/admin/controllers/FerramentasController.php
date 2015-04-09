@@ -96,6 +96,7 @@ class Admin_FerramentasController extends SON_Controller_Action
 				  			->setCellValue('F'.(string)$contador, $array_dados[$valor]);
 						}
 					}
+					
 					if($valor == trim(str_replace(' ', '',str_replace('-', '',$data['tipocabo0'])))) {
 						$objPHPExcel->setActiveSheetIndex(0)
 				  			->setCellValue('F'.(string)$contador, $data['cabo0_qtd']);
@@ -110,7 +111,6 @@ class Admin_FerramentasController extends SON_Controller_Action
 				  			->setCellValue('F'.(string)$contador, $data['lpi_qtd']);
 					}
 
-
 					$coluna = 'A'. $contador;
 					$valor = trim(str_replace(' ', '',str_replace('-', '', $objPHPExcel->getActiveSheet()->getCell($coluna)->getFormattedValue())));
 					if($valor != '' && $valor != 'PartNumber') {
@@ -118,10 +118,16 @@ class Admin_FerramentasController extends SON_Controller_Action
 							$objPHPExcel->setActiveSheetIndex(0)
 				  			->setCellValue('B'.(string)$contador, $array_taps[$valor]);
 						}
+
+						if($valor == "DUALOUTRIPLE") {
+							$objPHPExcel->setActiveSheetIndex(0)
+				  			->setCellValue('B'.(string)$contador, (string)((int)$array_taps['AMP3'] + (int)$array_taps['AMP3AC']));
+						}
 					}
 
 					$contador += 1;
 				}
+
 
 
 

@@ -48,6 +48,15 @@ class Admin_ClientesController extends SON_Controller_Action
 
     }
 
+    public function ajaxexcluirAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+
+        $this->_dbClientes = new Application_Model_Clientes();
+        $this->_dbClientes->delete($_POST['id']);
+        echo 'O cliente ' . $_POST['id'] . ' foi excluído <img src="/images/trash-icon.png" />. ';
+    }
+
     public function deleteAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(TRUE);

@@ -49,6 +49,7 @@ class SON_Form_Mesclarexcel extends Zend_Form {
                 ->addValidator('NotEmpty')
                 ->setAttrib('class', 'form-control')
                 ->setAttrib('placeholder', 'Ex: P3-500JCA AER')
+                ->setValue('P3-500JCA AER')
                 ->setAttrib('title', 'Tipo de cabo 0');
         $this->addElement($cabo0);
 
@@ -75,6 +76,7 @@ class SON_Form_Mesclarexcel extends Zend_Form {
                 ->addFilter('StringTrim')
                 ->addValidator('NotEmpty')
                 ->setAttrib('class', 'form-control')
+                ->setValue('P3-750JCA AER')
                 ->setAttrib('placeholder', 'Ex: P3-750JCA AER')
                 ->setAttrib('title', 'Tipo de cabo 2');
         $this->addElement($cabo2);
@@ -104,6 +106,7 @@ class SON_Form_Mesclarexcel extends Zend_Form {
                 ->addValidator('NotEmpty')
                 ->setAttrib('class', 'form-control')
                 ->setAttrib('placeholder', 'Ex: Alpha')
+                ->setValue('Alpha')
                 ->setAttrib('title', 'Tipo de fonte');
         $this->addElement($fonte);
 
@@ -131,6 +134,7 @@ class SON_Form_Mesclarexcel extends Zend_Form {
                 ->addValidator('NotEmpty')
                 ->setAttrib('class', 'form-control')
                 ->setAttrib('placeholder', 'Ex: 9-LPI\22A')
+                ->setValue('9-LPI\22A')
                 ->setAttrib('title', 'LPI');
         $this->addElement($lpi);
 
@@ -153,7 +157,7 @@ class SON_Form_Mesclarexcel extends Zend_Form {
 
 		$resultado = new Zend_Form_Element_Text('arquivo_save');
         $resultado->setLabel('Arquivo Download  : ')
-                //->setRequired(true)
+                ->setRequired(true)
                 ->addFilter('StripTags')
                 ->addFilter('StringTrim')
                 ->addValidator('NotEmpty')

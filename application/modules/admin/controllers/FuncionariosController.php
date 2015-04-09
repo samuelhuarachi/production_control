@@ -43,6 +43,15 @@ class Admin_FuncionariosController extends SON_Controller_Action
         $this->_redirect('admin/funcionarios/editar/id/'.$userID);
     }
 
+    public function ajaxexcluirAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(TRUE);
+
+        $this->_dbUser = new Application_Model_User();
+        //$this->_dbUser->delete($_POST['id']);
+        echo 'Usuário ' . $_POST['id'] . ' foi excluído <img src="/images/trash-icon.png" />. ';
+    }
+
     public function editarferiasAction() {
         $funcoes = new Funcoes_Geral();
         $feriasID = $this->_request->getParam('id', 0);
@@ -95,7 +104,7 @@ class Admin_FuncionariosController extends SON_Controller_Action
             $formularioFuncionarios->populate($funcionario['0']);
         }
         
-        //Trata da atualização das infomrações do funcionário
+        //Trata da atualização das informações do funcionário
         if($this->_request->isPost() && isset($_POST['funcionarios'])) {
             if($formularioFuncionarios->isValid($this->_request->getPost())){
                 $dataUser = $formularioFuncionarios->getValues(); // Informações que serão inseridas na tabela dos usuários

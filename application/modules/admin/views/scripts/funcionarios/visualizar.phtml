@@ -32,6 +32,8 @@
 
 <br>
 
+
+<!-- Adaptação1 - Início -->
 <style>
   .selecionados {
     background-color:#F5F5F5 ;
@@ -39,10 +41,19 @@
     border-radius: 10px;
     padding:10px;
   }
+
+  .resultado {
+    color: #ff0000;
+    padding:10px;
+  }
 </style>
 <div class="selecionados">
-  <b>Selecionados</b> <button onclick="procura_usuarios()">Excluir</button>
+  <b>Selecionados</b> 
+  <button onclick="selecionarTodos(this)">Todos</button>
+  <button onclick="procura_usuarios()">Excluir</button>
 </div>
+<!-- Adaptação1 - Fim -->
+
 
 
 <br>
@@ -62,14 +73,14 @@
 <?php
  foreach ($this->registros as $funcionarios):
 ?>
-	<tr>
-    <td> <input type="checkbox" name="vehicle" value="<?php echo $funcionarios['id_user'] ?>" class="ck_user"> </td>
+	<tr class="ck_user<?php echo $funcionarios['id_user'] ?>">
+    <td > <input class="checkbox<?php echo $funcionarios['id_user'] ?>" type="checkbox" name="vehicle" value="<?php echo $funcionarios['id_user'] ?>" > </td>
 		<td> <?php echo $funcionarios['nome']; ?> </td>
 		<td><?php echo $funcionarios['email']; ?></td>
 		<td><?php echo $this->funcoes->diff2(date("d/m/Y", strtotime($funcionarios['admissao']) ), date("d/m/Y") ) . ' dias'; ?></td>
 		<td><?php echo $this->funcoes->volta_data_ao_normal($funcionarios['admissao']); ?></td>
 		<td> <a href="<?php echo $this->baseUrl("admin/funcionarios/editar/id/" . $funcionarios['id_user']); ?>"><button class="btn btn-info btn-xs">  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Editar</button> </a>
-		
+
     <a href="<?php echo $this->baseUrl("admin/funcionarios/delete/id/" . $funcionarios['id_user']); ?>" onclick="return confirm('Você quer excluir esse funcionario?')">
     <button class="btn btn-danger btn-xs">  <span class="glyphicon glyphicon-trash" aria-hidden="true" ></span> Excluir</button></a>
 		</td>
@@ -84,27 +95,94 @@
 
 
 <script type="text/javascript">
+  var tabelaUser = "tabela_usuarios";
+
+  //marca todos os checkbox dos usuários
+  function selecionarTodos(obj) {
+    var valor;
+
+    container = document.getElementById(tabelaUser);
+    items = container.getElementsByTagName('input');
+    label = obj.innerHTML; // Valor presente no botão. Poder ser todos, ou nenhum
+    if (label == "Todos") {
+      obj.innerHTML = "Nenhum";
+      valor = true;
+    }else {
+      obj.innerHTML = "Todos";
+      valor = false;
+    }
+
+    for (var j = 0; j < items.length; j++) {
+        //Se o elemento está visível na página
+        if(  $(items[j]).is(":visible") == true )
+        {  
+             items[j].checked = valor;
+        }
+
+    }
+
+  }
 
   //Procura usuários que estão selecionados, para cumprir com
   //uma determinada ação
   function procura_usuarios() {
+    if (!confirm('Deseja realmente excluir os funcionários?')) {
+        return false;
+    }
+
     var anchor = null;
     var container;
     var items;
+    var resultado;
+    resultado = '';
 
-    container = document.getElementById('tabela_usuarios');
+    container = document.getElementById(tabelaUser);
     items = container.getElementsByTagName('input');
 
     for (var j = 0; j < items.length; j++) {
-        var x = items[j].checked;
-        
-        //if (items[j].href === 'http://www.msn.com') {
-        //   anchor = items[j];
-        //    break;
-        //}
+        if(items[j].checked == true) {
+          idCliente = items[j].value; // return string
+          $.ajax({
+            type: 'POST',
+            url: '/admin/funcionarios/ajaxexcluir', //Adaptação1 <= Especificar a url
+            data: { id : idCliente },
+            async: false,
+            success: function(response) {
+              resultado = resultado + response;
+            }
+
+          });
+
+          //Verifica se a classe 'resultado' existe
+          if (!$(".resultado")[0]){
+              $(".selecionados").after("<div class='resultado'></div>")
+          }
+
+          $('.resultado').html(resultado);
+          $(".ck_user" + idCliente).hide();
+          $(".checkbox" + idCliente).prop("checked", false);
+        }
     }
+    return false
   };
-  
+
+  function Redirect (url) {
+      var ua        = navigator.userAgent.toLowerCase(),
+        isIE      = ua.indexOf('msie') !== -1,
+        version   = parseInt(ua.substr(4, 2), 10);
+
+      // Internet Explorer 8 and lower
+      if (isIE && version < 9) {
+          var link = document.createElement('a');
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+      }
+
+      // All other browsers
+      else { window.location.href = url; }
+  }
+
   //procura_usuarios();
 </script>
 
