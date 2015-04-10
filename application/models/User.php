@@ -108,6 +108,7 @@ class Application_Model_User extends Application_Model_Abstract implements Zend_
             }
         }
 
+
         if( !is_null($limit) || $limit != 0 )
             $select->limit( $perPage, $limit );
         

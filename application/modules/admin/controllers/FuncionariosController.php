@@ -165,12 +165,26 @@ class Admin_FuncionariosController extends SON_Controller_Action
 
     public function visualizarAction()
     {
+        $filtroSQL = array();
+
+        $this->procurar = $this->_request->getParam('procurar', null);
+        if($this->procurar) {
+            $filtroSQL['nome LIKE ?'] = "%{$this->procurar}%";
+        }
+
+
         $this->view->funcoes = new Funcoes_Geral();
         $this->_dbUser = new Application_Model_User();
-        $this->view->registros = $this->_dbUser->search(array('page' => $this->_request->getParam('pagina', 1)));
+        $this->view->registros = $this->_dbUser->search(array(
+            'page' => $this->_request->getParam('pagina', 1),
+            'conditions' => $filtroSQL
+            )
+        );
+        
 
-
+        
     }
+
     public function cadastrarAction()
     {
         $funcoes = new Funcoes_Geral();
