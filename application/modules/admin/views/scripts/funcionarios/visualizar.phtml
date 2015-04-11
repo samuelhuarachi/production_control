@@ -99,9 +99,9 @@
     var user_input;
     user_input = document.getElementsByClassName("find_user")[0].value.trim();
     if(user_input.length != 0) {
-      window.location.replace("/admin/funcionarios/visualizar/procurar/" + user_input);
+      window.location.replace(BASEURL + "admin/funcionarios/visualizar/procurar/" + user_input);
     } else {
-      window.location.replace("/admin/funcionarios/visualizar");
+      window.location.replace(BASEURL + "admin/funcionarios/visualizar");
     }
   }
 
