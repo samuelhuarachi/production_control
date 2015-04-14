@@ -108,8 +108,20 @@ class Admin_ClientesController extends SON_Controller_Action
 
 
     public function visualizarAction() {
+        $filtroSQL = array();
+
+        $this->procurar = $this->_request->getParam('procurar', null);
+        if($this->procurar) {
+            $filtroSQL['nome LIKE ?'] = "%{$this->procurar}%";
+        }
+
+
         $this->_dbClientes = new Application_Model_Clientes();
-        $this->view->registros = $this->_dbClientes->search(array('page' => $this->_request->getParam('pagina', 1)));
+        $this->view->registros = $this->_dbClientes->search(
+            array(  'page' => $this->_request->getParam('pagina', 1),
+                    'conditions' => $filtroSQL
+                )
+            );
     }
 }
 

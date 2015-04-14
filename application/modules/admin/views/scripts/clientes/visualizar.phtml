@@ -15,9 +15,9 @@
 <div class="row">
   <div class="col-lg-6">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Procurar Clientes...">
+      <input type="text" class="form-control find" placeholder="Procurar Clientes...">
       <span class="input-group-btn">
-        <button class="btn btn-success" type="button">Buscar</button>
+        <button class="btn btn-success" type="button" onclick="buscar_clientes()">Buscar</button>
       </span>
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
@@ -57,14 +57,12 @@
 <!-- Adaptação1 - Fim -->
 
 <table class="table table-hover" id="tabela_usuarios">
-
-<tr>
-  <td></td>
-	<td><strong>Nome</strong></td>
-	<td><strong>Data registro</strong></td>
-	<td></td>
-</tr>
-
+  <tr>
+    <td></td>
+  	<td><strong>Nome</strong></td>
+  	<td><strong>Data registro</strong></td>
+  	<td></td>
+  </tr>
 <?php
  foreach ($this->registros as $clientes):
 ?>
@@ -86,6 +84,18 @@
 </table>
 
 <script type="text/javascript">
+
+  function buscar_clientes() {
+    var input;
+    input = document.getElementsByClassName("find")[0].value.trim();
+    if(input.length != 0) {
+      window.location.replace(BASEURL + "admin/clientes/visualizar/procurar/" + input);
+    } else {
+      window.location.replace(BASEURL + "admin/clientes/visualizar");
+    }
+  }
+
+
   var tabelaUser = "tabela_usuarios";
 
   //marca todos os checkbox dos usuários
@@ -98,7 +108,7 @@
     if (label == "Todos") {
       obj.innerHTML = "Nenhum";
       valor = true;
-    }else {
+    } else {
       obj.innerHTML = "Todos";
       valor = false;
     }

@@ -180,9 +180,6 @@ class Admin_FuncionariosController extends SON_Controller_Action
             'conditions' => $filtroSQL
             )
         );
-        
-
-        
     }
 
     public function cadastrarAction()
