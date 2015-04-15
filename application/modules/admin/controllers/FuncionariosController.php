@@ -18,7 +18,9 @@ class Admin_FuncionariosController extends SON_Controller_Action
     }
 
     public function indexAction()
-    {  }
+    {  
+
+    }
 
     public function deleteAction() {
         $this->_dbUser = new Application_Model_User();
@@ -192,50 +194,64 @@ class Admin_FuncionariosController extends SON_Controller_Action
     	if($this->_request->isPost()) {
 
             //Se formulário é válido
-            if($formularioCadastro->isValid($this->_request->getPost())){
-                $dataUser = $formularioCadastro->getValues(); // Informações que serão inseridas na tabela dos usuários
-                $dataFuncionarios = array(); // Informações que serão inseridas na tabela dos funcionários
-
-                $dataFuncionarios['rg'] = $dataUser['rg'];
-                $dataFuncionarios['data_nascimento'] = $dataUser['data_nascimento'];
-                $dataFuncionarios['admissao'] = $funcoes->formata_data_para_padrao_mysql($dataUser['admissao']);
-                $dataFuncionarios['salario'] = $dataUser['salario'];
-                $dataFuncionarios['cargo'] = $dataUser['cargo'];
-
-
-                unset($dataUser['cargo']);
-                unset($dataUser['salario']);
-                unset($dataUser['rg']);
-                unset($dataUser['data_nascimento']);
-                unset($dataUser['admissao']);
-                unset($dataUser['funcionarios']);
-
+            if ($formularioCadastro->isValid($this->_request->getPost())) {
+                $dataUser = $formularioCadastro->getValues(); // Informações que 
+                // serão inseridas na tabela dos usuários
                 $this->_dbUser = new Application_Model_User();
-                $this->_dbUserDbtable = new Application_Model_DbTable_User();
-                $dataUser['tipo'] = '2'; //define o tipo do usário como 2 = funcionário
+                $userFind = $this->_dbUser->findbyEmail($dataUser['email'], false);
+                if($userFind) {
+                    //Flash mensager avisando que o usuário foi cadastrado com sucesso
+                    $this->_helper->flashMessenger->addMessage(
+                        "<div class=\"alert alert-danger\" role=\"alert\">O email \"".
+                        $dataUser['email']."\" já está cadastrado no sistema</div>");
+                    
+                    //Redireciona
+                    $this->_redirect('/admin/funcionarios/cadastrar');
 
-                $this->_dbUser->save($dataUser); //salva informações no banco de dados
+                } else {
+                    $dataFuncionarios = array(); // Informações que serão inseridas na tabela dos funcionários
 
-                $last_id = $this->_dbUserDbtable->getAdapter()->lastInsertId(); //Pega a id
-                //do usuário que acabou de ser inserido
+                    $dataFuncionarios['rg'] = $dataUser['rg'];
+                    $dataFuncionarios['data_nascimento'] = $dataUser['data_nascimento'];
+                    $dataFuncionarios['admissao'] = $funcoes->formata_data_para_padrao_mysql($dataUser['admissao']);
+                    $dataFuncionarios['salario'] = $dataUser['salario'];
+                    $dataFuncionarios['cargo'] = $dataUser['cargo'];
 
+                    unset($dataUser['cargo']);
+                    unset($dataUser['salario']);
+                    unset($dataUser['rg']);
+                    unset($dataUser['data_nascimento']);
+                    unset($dataUser['admissao']);
+                    unset($dataUser['funcionarios']);
 
-                $dataFuncionarios['id_user'] = (int)$last_id;
-                $data_atual = new Zend_Date();
-                $dataFuncionarios['data_cadastro'] = $data_atual->toString('YYYY-MM-dd HH:mm:ss');
+                    $this->_dbUser = new Application_Model_User();
+                    $this->_dbUserDbtable = new Application_Model_DbTable_User();
+                    $dataUser['tipo'] = '2'; //define o tipo do usário como 2 = funcionário
 
+                    $this->_dbUser->save($dataUser); //salva informações no banco de dados
 
-                $this->_dbFuncionarios = new Application_Model_Funcionarios();
-                $this->_dbFuncionarios->save($dataFuncionarios); //salva informações no banco de dados
+                    $last_id = $this->_dbUserDbtable->getAdapter()->lastInsertId(); //Pega a id
+                    //do usuário que acabou de ser inserido
 
-                //Flash mensager avisando que o usuário foi cadastrado com sucesso
-                $this->_helper->flashMessenger->addMessage("O funcionário(a) ".$dataUser['nome']." foi cadastrado no sistema");
-                //Redireciona
-                $this->_redirect('/admin/funcionarios/cadastrar');
+                    $dataFuncionarios['id_user'] = (int)$last_id;
+                    $data_atual = new Zend_Date();
+                    $dataFuncionarios['data_cadastro'] = 
+                        $data_atual->toString('YYYY-MM-dd HH:mm:ss');
+
+                    $this->_dbFuncionarios = new Application_Model_Funcionarios();
+                    $this->_dbFuncionarios->save($dataFuncionarios); //salva informações no banco de dados
+
+                    //Flash mensager avisando que o usuário foi cadastrado com sucesso
+                    $this->_helper->flashMessenger->addMessage(
+                        "<div class=\"alert alert-success\" 
+                        role=\"alert\">O funcionário(a) ".
+                        $dataUser['nome']." foi cadastrado no sistema</div>");
+                    
+                    //Redireciona
+                    $this->_redirect('/admin/funcionarios/cadastrar');
+                }
             }
         }
-
-
 
     	$this->view->formularioCadastro = $formularioCadastro;
     }

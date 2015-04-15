@@ -30,8 +30,7 @@
 <?php if (count($this->messages)) : ?>
     <?php foreach ($this->messages as $message) : ?>
     <div id="field_name">
-    <!-- <strong style="text-transform:capitalize;">Email </strong> -->
-        <?php echo $this->escape($message); ?>
+        <?php echo $message; ?>
     </div>
     <?php endforeach; ?>
 <?php endif; ?>

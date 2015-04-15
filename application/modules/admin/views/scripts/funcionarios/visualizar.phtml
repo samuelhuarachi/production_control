@@ -5,9 +5,9 @@
 
 
 <p>
-<a href="<?php echo $this->baseUrl("admin/funcionarios/cadastrar"); ?>">
-<button type="button" class="btn btn-default">Adicionar</button>
-</a>
+  <a href="<?php echo $this->baseUrl("admin/funcionarios/cadastrar"); ?>">
+    <button type="button" class="btn btn-default">Adicionar</button>
+  </a>
 </p>
 
 
@@ -75,7 +75,7 @@
 ?>
 	<tr class="ck_user<?php echo $funcionarios['id_user'] ?>">
     <td > <input class="checkbox<?php echo $funcionarios['id_user'] ?>" type="checkbox" name="vehicle" value="<?php echo $funcionarios['id_user'] ?>" > </td>
-		<td> <?php echo $funcionarios['nome']; ?> </td>
+		<td> <a href="<?php echo $this->baseUrl("admin/funcionarios/editar/id/" . $funcionarios['id_user']); ?>"><?php echo $funcionarios['nome']; ?> </a> </td>
 		<td><?php echo $funcionarios['email']; ?></td>
 		<td><?php echo $this->funcoes->diff2(date("d/m/Y", strtotime($funcionarios['admissao']) ), date("d/m/Y") ) . ' dias'; ?></td>
 		<td><?php echo $this->funcoes->volta_data_ao_normal($funcionarios['admissao']); ?></td>
@@ -139,7 +139,7 @@
         return false;
     }
 
-    var anchor = null;
+    //var anchor = null;
     var container;
     var items;
     var resultado;
